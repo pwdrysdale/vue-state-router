@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <font-awesome-icon icon="cross" />
+    <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
+    <font-awesome-icon icon="user-secret" />
     <h3>Vue - Learning State with Router</h3>
     <Navigation />
     <router-view />
@@ -38,5 +41,18 @@ button {
   font-size: 1em;
   padding: 0.5em;
   cursor: pointer;
+}
+
+input {
+  border-radius: 5px;
+  border: none;
+  background: inherit;
+  color: white;
+  font-size: 1em;
+  padding: 0.5em;
+}
+
+.icon {
+  color: white;
 }
 </style>

@@ -1,42 +1,41 @@
 <template>
   <div class="ToDos">
     <h1>To Do's</h1>
-    <ul>
-      <li v-for="todo in todos" v-bind:key="todo.id">
-        <input type="checkbox" v-model="todo.completed" />
-        <input
-          type="text"
-          name="todo.text"
-          v-bind="setInLocal()"
-          v-model="todo.text"
-        />
-        <button v-on:click="removeTodo(todo)">Remove</button>
-        <input
-          type="date"
-          :value="todo.dueDate.toISOString().split('T')[0]"
-          @input="setDate($event.target.value, todo)"
-        />
-      </li>
-    </ul>
-    <p v-for="todo in todos" v-bind:key="todo.id">
-      {{ todo.text }}
-    </p>
+    <button v-on:click="changeSortCategory">{{ sort }}</button>
+    <button v-on:click="changeSortOrder">{{ sortOrder }}</button>
+    <div class="list">
+      <ToDoListItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" />
+    </div>
+
     <input type="text" v-model="newTodo" placeholder="Add a to do here..." />
     <button v-on:click="addTodo">Add Todo</button>
   </div>
 </template>
 
 <script>
+import ToDoListItem from "./ToDoListItem.vue";
+
+// sort options
+// createdDate
+// dueDate
+// priority
+// completed
+// text
+
 export default {
   name: "ToDoList",
   data() {
     return {
       newTodo: "",
+      sort: "Created Date",
+      sortOrder: "Ascending",
     };
   },
   computed: {
     todos() {
-      return this.$store.state.todos;
+      return [...this.$store.state.todos].sort((a, b) =>
+        this.sortBy(a, b, this.sort, this.sortOrder)
+      );
     },
   },
   methods: {
@@ -44,20 +43,63 @@ export default {
       this.$store.dispatch("addTodo", this.newTodo);
       this.newTodo = "";
     },
-    removeTodo(todo) {
-      this.$store.dispatch("removeTodo", todo);
+    changeSortCategory() {
+      const options = [
+        "Created Date",
+        "Due Date",
+        "Priority",
+        "Completed",
+        "Todo Text",
+      ];
+      const index = options.indexOf(this.sort);
+      const nextIndex = (index + 1) % options.length;
+      this.sort = options[nextIndex];
     },
-    setDate(date, todo) {
-      const dueDate = new Date(date);
-      this.$store.dispatch("setTodo", { ...todo, dueDate });
-      todo.dueDate = new Date(this.$el.value);
+    changeSortOrder() {
+      this.sortOrder =
+        this.sortOrder === "Ascending" ? "Descending" : "Ascending";
     },
-    setInLocal() {
-      this.$store.dispatch("setInLocal");
+    sortBy(a, b, sort, sortOrder) {
+      if (sort === "Created Date") {
+        return sortOrder === "Ascending"
+          ? a.createdDate - b.createdDate
+          : b.createdDate - a.createdDate;
+      } else if (sort === "Due Date") {
+        return sortOrder === "Ascending"
+          ? a.dueDate - b.dueDate
+          : b.dueDate - a.dueDate;
+      } else if (sort === "Priority") {
+        return sortOrder === "Ascending"
+          ? a.priority - b.priority
+          : b.priority - a.priority;
+      } else if (sort === "Completed") {
+        return sortOrder === "Ascending"
+          ? a.completed - b.completed
+          : b.completed - a.completed;
+      } else if (sort === "Todo Text") {
+        return sortOrder === "Ascending"
+          ? a.text.localeCompare(b.text)
+          : b.text.localeCompare(a.text);
+      }
     },
   },
   async created() {
     this.$store.dispatch("getTodosFromLocal");
   },
+  components: {
+    ToDoListItem,
+  },
 };
 </script>
+
+<style scoped>
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto;
+  width: max-content;
+}
+</style>
