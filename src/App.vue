@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <font-awesome-icon icon="cross" />
-    <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
-    <font-awesome-icon icon="user-secret" />
-    <h3>Vue - Learning State with Router</h3>
-    <Navigation />
+    <div class="mx-auto flex flex-col items-center">
+      <font-awesome-icon icon="cross" class="text-9xl my-10" />
+      <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
+      <h3>Pete's Toolkit</h3>
+      <Navigation />
+    </div>
     <router-view />
   </div>
 </template>
@@ -24,6 +25,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  width: 100vw;
+  @apply bg-gray-900 flex flex-col;
 }
 
 body {

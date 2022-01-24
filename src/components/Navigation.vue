@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="button-group">
     <router-link :to="{ name: 'Todos' }">
       <button>Todos</button>
     </router-link>

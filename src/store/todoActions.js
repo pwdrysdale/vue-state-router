@@ -27,4 +27,12 @@ export default {
     });
     context.commit("loadTodos", datesFixed);
   },
+  clearCompleted(context) {
+    context.commit("clearCompletedTodosMutation");
+    context.dispatch("setInLocal");
+  },
+  clearAll(context) {
+    context.commit("clearAllTodosMutation");
+    context.dispatch("setInLocal");
+  },
 };

@@ -18,21 +18,37 @@
         class="checkicon red"
       />
     </label>
-    <input
+    <textarea-autosize
+      autosize
+      rows="1"
       type="text"
       name="todo.text"
       v-bind="setInLocal()"
       v-model="todo.text"
     />
-    <button v-on:click="removeTodo(todo)">
-      <font-awesome-icon icon="trash" />
-    </button>
     <input
       type="date"
       :value="todo.dueDate.toISOString().split('T')[0]"
       @input="setDate($event.target.value, todo)"
     />
-    <select v-model.number="todo.priority">
+    <button @click="removeTodo(todo)" class="mx-2">
+      <font-awesome-icon icon="trash" />
+    </button>
+    <select
+      v-model.number="todo.priority"
+      class="opacity-80"
+      :class="
+        todo.priority === 5
+          ? 'bg-purple-800'
+          : todo.priority === 4
+          ? 'bg-red-800'
+          : todo.priority === 3
+          ? 'bg-yellow-800'
+          : todo.priority === 2
+          ? 'bg-blue-800'
+          : 'bg-green-800'
+      "
+    >
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -64,12 +80,7 @@ export default {
 
 <style scoped>
 .item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin: 3px auto 0 auto;
-  width: max-content;
+  @apply flex flex-row items-center justify-between py-2 mx-auto w-max border-b-2 border-gray-800;
 }
 
 .hide {

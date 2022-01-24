@@ -17,6 +17,12 @@ export default {
   removeTodoMutation(state, todo) {
     state.todos = state.todos.filter((t) => t.id !== todo.id);
   },
+  clearCompletedTodosMutation(state) {
+    state.todos = state.todos.filter((t) => !t.completed);
+  },
+  clearAllTodosMutation(state) {
+    state.todos = [];
+  },
   setToDoMutation(state, payload) {
     state.todos = state.todos.map((t) => {
       if (t.id === payload.id) {

@@ -1,26 +1,25 @@
 <template>
-  <div class="ToDos">
+  <div class="ToDos mx-auto px-10">
     <h1>To Do's</h1>
-    <button v-on:click="changeSortCategory">{{ sort }}</button>
-    <button v-on:click="changeSortOrder">{{ sortOrder }}</button>
+    <div class="button-group">
+      <button v-on:click="changeSortCategory">{{ sort }}</button>
+      <button v-on:click="changeSortOrder">{{ sortOrder }}</button>
+    </div>
     <div class="list">
       <ToDoListItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" />
     </div>
 
-    <input type="text" v-model="newTodo" placeholder="Add a to do here..." />
-    <button v-on:click="addTodo">Add Todo</button>
+    <div class="button-group flex w-full">
+      <input type="text" v-model="newTodo" placeholder="Add a to do here..." />
+      <button v-on:click="addTodo">Add Todo</button>
+      <button @click="clearCompleted">Clear Completed</button>
+      <button @click="clearAll">Clear All</button>
+    </div>
   </div>
 </template>
 
 <script>
 import ToDoListItem from "./ToDoListItem.vue";
-
-// sort options
-// createdDate
-// dueDate
-// priority
-// completed
-// text
 
 export default {
   name: "ToDoList",
@@ -59,6 +58,12 @@ export default {
       this.sortOrder =
         this.sortOrder === "Ascending" ? "Descending" : "Ascending";
     },
+    clearCompleted() {
+      this.$store.dispatch("clearCompleted");
+    },
+    clearAll() {
+      this.$store.dispatch("clearAll");
+    },
     sortBy(a, b, sort, sortOrder) {
       if (sort === "Created Date") {
         return sortOrder === "Ascending"
@@ -74,8 +79,12 @@ export default {
           : b.priority - a.priority;
       } else if (sort === "Completed") {
         return sortOrder === "Ascending"
-          ? a.completed - b.completed
-          : b.completed - a.completed;
+          ? a.completed
+            ? -1
+            : 1
+          : a.completed
+          ? 1
+          : -1;
       } else if (sort === "Todo Text") {
         return sortOrder === "Ascending"
           ? a.text.localeCompare(b.text)
@@ -98,7 +107,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   margin: 0 auto;
   width: max-content;
 }
