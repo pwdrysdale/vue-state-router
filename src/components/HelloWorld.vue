@@ -1,21 +1,35 @@
 <template>
   <div class="mx-auto px-10 flex items-center flex-col">
-    <h3>Vue Counter</h3>
+    <h3>Counters</h3>
     <h3>{{ count }}</h3>
     <div class="button-group">
       <button v-on:click="increment">Increment</button>
       <button v-on:click="decrement">Decrement</button>
       <button v-on:click="reset">Reset</button>
     </div>
+    <Counter
+      v-for="counter in counters"
+      v-bind:key="counter.id"
+      v-bind="{ ...counter }"
+    />
+    <button @click="addCounter">Add Counter</button>
   </div>
 </template>
 
 <script>
+import Counter from "./Counter.vue";
+
 export default {
   name: "HelloWorld",
+  components: {
+    Counter,
+  },
   computed: {
     count() {
       return this.$store.state.count;
+    },
+    counters() {
+      return this.$store.state.counters;
     },
   },
   methods: {
@@ -28,27 +42,12 @@ export default {
     reset() {
       return this.$store.commit("reset");
     },
+    addCounter() {
+      return this.$store.dispatch("addCounter");
+    },
+  },
+  created() {
+    this.$store.dispatch("getCountersFromLocalStorage");
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-  color: white;
-  font-size: 40px;
-  font-weight: bold;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

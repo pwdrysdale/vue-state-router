@@ -1,6 +1,6 @@
 <template>
   <div class="ToDos mx-auto px-10">
-    <h1>To Do's</h1>
+    <h3 class="text-center">To Do's</h3>
     <div class="button-group">
       <button v-on:click="changeSortCategory">{{ sort }}</button>
       <button v-on:click="changeSortOrder">{{ sortOrder }}</button>
@@ -103,11 +103,6 @@ export default {
 
 <style scoped>
 .list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  width: max-content;
+  @apply flex flex-col items-center justify-center mx-auto w-max;
 }
 </style>

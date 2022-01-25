@@ -18,13 +18,7 @@
         class="checkicon red"
       />
     </label>
-    <textarea-autosize
-      autosize
-      rows="1"
-      type="text"
-      name="todo.text"
-      v-model="textModel"
-    />
+    <textarea-autosize autosize rows="1" v-model="textModel" />
     <input
       type="date"
       :value="todo.dueDate.toISOString().split('T')[0]"
@@ -97,19 +91,18 @@ export default {
 }
 
 .hide {
-  display: none;
+  @apply hidden;
 }
 
 .checkicon {
-  margin-right: 0.5em;
-  width: 1em;
+  @apply mr-2 w-4;
 }
 
 .green {
-  color: green;
+  @apply text-green-500;
 }
 
 .red {
-  color: red;
+  @apply text-red-500;
 }
 </style>

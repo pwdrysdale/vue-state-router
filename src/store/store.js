@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import { v4 as uuid } from "uuid";
 
 import counterMutations from "./counterMutations";
+import counterActions from "./counterActions";
 
 import todoMutations from "./todoMutations";
 import todoActions from "./todoActions";
@@ -15,6 +16,14 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     count: 0,
+    counters: [
+      {
+        id: uuid(),
+        name: "Counter 1",
+        count: 0,
+        increment: 1,
+      },
+    ],
     todos: [
       {
         id: uuid(),
@@ -41,6 +50,7 @@ const store = new Vuex.Store({
   },
   actions: {
     ...todoActions,
+    ...counterActions,
   },
 });
 

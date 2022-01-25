@@ -1,5 +1,5 @@
 <template>
-  <div class="timer flex flex-col items-center">
+  <div class="timer flex flex-col items-center border-t-2 my-2 border-gray-800">
     <div>
       <textarea-autosize
         autosize
@@ -92,5 +92,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

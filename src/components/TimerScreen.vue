@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto px-10 flex flex-col items-center">
-    <h1>Timers</h1>
+    <h3>Timers</h3>
     <Timer
       v-for="(timer, index) of timers"
       v-bind:key="index"
