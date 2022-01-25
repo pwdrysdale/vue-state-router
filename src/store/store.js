@@ -8,6 +8,8 @@ import counterMutations from "./counterMutations";
 import todoMutations from "./todoMutations";
 import todoActions from "./todoActions";
 
+import timerMutations from "./timerMutations";
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -23,10 +25,19 @@ const store = new Vuex.Store({
         priority: 3,
       },
     ],
+    timers: [
+      {
+        id: uuid(),
+        timerName: "Default Timer",
+        time: 0,
+        interval: null,
+      },
+    ],
   },
   mutations: {
     ...todoMutations,
     ...counterMutations,
+    ...timerMutations,
   },
   actions: {
     ...todoActions,

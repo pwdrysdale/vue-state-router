@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div class="mx-auto px-10 flex items-center flex-col">
     <h3>Vue Counter</h3>
     <h3>{{ count }}</h3>
-    <button v-on:click="increment">Increment</button>
-    <button v-on:click="decrement">Decrement</button>
-    <button v-on:click="reset">Reset</button>
+    <div class="button-group">
+      <button v-on:click="increment">Increment</button>
+      <button v-on:click="decrement">Decrement</button>
+      <button v-on:click="reset">Reset</button>
+    </div>
   </div>
 </template>
 

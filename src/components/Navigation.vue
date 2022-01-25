@@ -6,6 +6,9 @@
     <router-link :to="{ name: 'Counter' }">
       <button>Counter</button>
     </router-link>
+    <router-link :to="{ name: 'TimerScreen' }">
+      <button>Timer</button>
+    </router-link>
   </div>
 </template>
 

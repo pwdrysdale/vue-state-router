@@ -23,8 +23,7 @@
       rows="1"
       type="text"
       name="todo.text"
-      v-bind="setInLocal()"
-      v-model="todo.text"
+      v-model="textModel"
     />
     <input
       type="date"
@@ -62,6 +61,20 @@
 export default {
   name: "ToDoListItem",
   props: ["todo"],
+  computed: {
+    textModel: {
+      get() {
+        return this.todo.text;
+      },
+      set(value) {
+        this.$store.dispatch("setTodo", {
+          ...this.todo,
+          text: value,
+        });
+        this.setInLocal();
+      },
+    },
+  },
   methods: {
     removeTodo(todo) {
       this.$store.dispatch("removeTodo", todo);
