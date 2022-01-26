@@ -3,7 +3,7 @@
     <div class="mx-auto flex flex-col items-center">
       <font-awesome-icon icon="cross" class="text-9xl my-10" />
       <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
-      <h3>Pete's Toolkit</h3>
+      <input v-model="name" class="text-center text-4xl font-bold" />
       <Navigation />
     </div>
     <router-view />
@@ -16,6 +16,19 @@ import Navigation from "./components/Navigation.vue";
 export default {
   name: "App",
   components: { Navigation },
+  computed: {
+    name: {
+      get() {
+        return this.$store.state.name;
+      },
+      set(name) {
+        this.$store.dispatch("setName", name);
+      },
+    },
+  },
+  created() {
+    this.$store.dispatch("loadName");
+  },
 };
 </script>
 

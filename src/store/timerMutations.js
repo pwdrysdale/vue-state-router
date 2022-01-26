@@ -7,6 +7,7 @@ export default {
       timerName: "New Timer",
       time: 0,
       interval: null,
+      dateCreated: new Date(),
     });
   },
   removeTimer(state, id) {

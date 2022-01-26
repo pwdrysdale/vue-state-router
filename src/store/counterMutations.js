@@ -1,17 +1,6 @@
 import { v4 as uuid } from "uuid";
 
 export default {
-  // direct straightforward manipulation of state
-  increment(state) {
-    state.count++;
-  },
-  decrement(state) {
-    state.count--;
-  },
-  reset(state) {
-    state.count = 0;
-  },
-
   // mutation that can be used to manipulate state
 
   loadCounters(state, counters) {
@@ -24,6 +13,7 @@ export default {
       name: "New Counter",
       count: 0,
       increment: 1,
+      dateCreated: new Date(),
     });
   },
   incrementCounter(state, id) {

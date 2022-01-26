@@ -1,5 +1,5 @@
 <template>
-  <div class="timer flex flex-col items-center border-t-2 my-2 border-gray-800">
+  <div class="timer flex flex-col items-center border-b-2 my-2 border-gray-800">
     <div>
       <textarea-autosize
         autosize
@@ -16,11 +16,15 @@
         v-if="this.interval === null || this.interval === 0"
         @click="startTimer"
       >
-        Start
+        <font-awesome-icon icon="play" />
       </button>
-      <button v-if="interval !== null" @click="stopTimer">Stop</button>
-      <button @click="restartTimer">Reset</button>
-      <button @click="removeTimer">Remove Timer</button>
+      <button v-if="interval !== null" @click="stopTimer">
+        <font-awesome-icon icon="stop" />
+      </button>
+      <button @click="restartTimer">
+        <font-awesome-icon icon="redo" />
+      </button>
+      <button @click="removeTimer"><font-awesome-icon icon="trash" /></button>
     </div>
   </div>
 </template>

@@ -9,11 +9,27 @@ import {
   faCross,
   faTrash,
   faCheck,
+  faRedo,
   faTimes,
+  faArrowUp,
+  faArrowDown,
+  faPlay,
+  faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add([faUserSecret, faCross, faTrash, faCheck, faTimes]);
+library.add([
+  faUserSecret,
+  faCross,
+  faTrash,
+  faCheck,
+  faTimes,
+  faArrowUp,
+  faArrowDown,
+  faRedo,
+  faPlay,
+  faStop,
+]);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.use(TextareaAutosize);

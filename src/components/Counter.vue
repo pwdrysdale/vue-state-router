@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center border-b-2 my-2 border-gray-800">
     <div>
       <textarea-autosize v-model="nameModel" rows="1" class="text-center" />
     </div>
@@ -11,10 +11,14 @@
     Increment:
     <input type="number" v-model="setIncrementModel" class="text-center" />
     <div class="button-group">
-      <button @click="incrementCounter">Increment</button>
-      <button @click="decrementCounter">Decrement</button>
-      <button @click="resetCounter">Reset</button>
-      <button @click="removeCounter">Remove Counter</button>
+      <button @click="incrementCounter">
+        <font-awesome-icon icon="arrow-up" />
+      </button>
+      <button @click="decrementCounter">
+        <font-awesome-icon icon="arrow-down" />
+      </button>
+      <button @click="resetCounter"><font-awesome-icon icon="redo" /></button>
+      <button @click="removeCounter"><font-awesome-icon icon="trash" /></button>
     </div>
   </div>
 </template>

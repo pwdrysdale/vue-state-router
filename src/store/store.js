@@ -10,12 +10,14 @@ import todoMutations from "./todoMutations";
 import todoActions from "./todoActions";
 
 import timerMutations from "./timerMutations";
+import appNameMutations from "./appNameMutations";
+import appNameActions from "./appNameActions";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    count: 0,
+    name: "Pete's Toolkit Store",
     counters: [
       {
         id: uuid(),
@@ -47,10 +49,12 @@ const store = new Vuex.Store({
     ...todoMutations,
     ...counterMutations,
     ...timerMutations,
+    ...appNameMutations,
   },
   actions: {
     ...todoActions,
     ...counterActions,
+    ...appNameActions,
   },
 });
 
