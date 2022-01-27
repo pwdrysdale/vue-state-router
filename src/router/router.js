@@ -7,17 +7,17 @@ const routes = [
   {
     path: "/counter",
     name: "Counter",
-    component: () => import("../components/HelloWorld.vue"),
+    component: () => import("../components/Counter/HelloWorld.vue"),
   },
   {
     path: "/todos",
     name: "Todos",
-    component: () => import("../components/ToDoList.vue"),
+    component: () => import("../components/Todo/ToDoList.vue"),
   },
   {
     path: "/timers",
     name: "TimerScreen",
-    component: () => import("../components/TimerScreen.vue"),
+    component: () => import("../components/Timer/TimerScreen.vue"),
   },
 ];
 

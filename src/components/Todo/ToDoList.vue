@@ -1,5 +1,5 @@
 <template>
-  <div class="ToDos mx-auto px-10">
+  <div class="px-10 mx-auto ToDos">
     <h3 class="text-center">To Do's</h3>
     <div class="button-group">
       <button v-on:click="changeSortCategory">{{ sort }}</button>
@@ -9,7 +9,7 @@
       <ToDoListItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" />
     </div>
 
-    <div class="button-group flex w-full">
+    <div class="flex w-full button-group">
       <input type="text" v-model="newTodo" placeholder="Add a to do here..." />
       <button v-on:click="addTodo">Add Todo</button>
       <button @click="clearCompleted">Clear Completed</button>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import ToDoListItem from "./ToDoListItem.vue";
+import ToDoListItem from "../Todo/ToDoListItem.vue";
 
 export default {
   name: "ToDoList",
