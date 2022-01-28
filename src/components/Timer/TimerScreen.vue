@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto px-10 flex flex-col items-center">
+  <div class="container flex flex-col items-center px-10 mx-auto">
     <h3>Timers</h3>
     <Timer
       v-for="(timer, index) of timers"

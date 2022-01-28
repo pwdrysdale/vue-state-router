@@ -1,5 +1,7 @@
 <template>
-  <div class="timer flex flex-col items-center border-b-2 my-2 border-gray-800">
+  <div
+    class="flex flex-col items-center w-full my-2 border-b-2 border-gray-800"
+  >
     <div>
       <textarea-autosize
         autosize
@@ -7,7 +9,7 @@
         type="text"
         v-model="name"
         rows="1"
-        class="w-32 md:w-64 lg:w-full text-center"
+        class="w-32 text-center md:w-64 lg:w-full"
       />
     </div>
     <h1>{{ displayTime() }}</h1>

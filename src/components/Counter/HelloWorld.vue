@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center px-10 mx-auto">
+  <div class="container flex flex-col items-center px-10 mx-auto">
     <h3>Counters</h3>
     <div class="button-group">
       <button @click="nextSortCategory">{{ sortBy }}</button>

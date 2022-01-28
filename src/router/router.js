@@ -5,6 +5,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: "/prayers",
+    name: "Prayers",
+    component: () => import("../components/Prayers/PrayerScreen.vue"),
+  },
+  {
     path: "/counter",
     name: "Counter",
     component: () => import("../components/Counter/HelloWorld.vue"),

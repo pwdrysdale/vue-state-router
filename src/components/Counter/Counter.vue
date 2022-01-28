@@ -1,12 +1,14 @@
 <template>
-  <div class="flex flex-col items-center border-b-2 my-2 border-gray-800">
+  <div
+    class="flex flex-col items-center w-full my-2 border-b-2 border-gray-800"
+  >
     <div>
       <textarea-autosize v-model="nameModel" rows="1" class="text-center" />
     </div>
     <input
       type="number"
       v-model="counterModel"
-      class="text-3xl text-center font-bold"
+      class="text-3xl font-bold text-center"
     />
     Increment:
     <input type="number" v-model="setIncrementModel" class="text-center" />

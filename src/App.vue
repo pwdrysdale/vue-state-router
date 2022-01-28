@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div class="mx-auto flex flex-col items-center">
-      <font-awesome-icon icon="cross" class="text-9xl my-10" />
+    <div class="flex flex-col items-center w-full mx-auto">
+      <font-awesome-icon icon="cross" class="my-10 text-9xl" />
       <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
-      <input v-model="name" class="text-center text-4xl font-bold" />
+      <input v-model="name" class="text-4xl font-bold text-center" />
       <Navigation />
     </div>
     <router-view />
@@ -37,9 +37,8 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-  width: 100vw;
-  @apply bg-gray-900 flex flex-col;
+
+  @apply bg-gray-900 flex flex-col min-h-screen min-w-full;
 }
 
 body {

@@ -87,7 +87,7 @@ export default {
 
 <style scoped>
 .item {
-  @apply flex flex-row items-center justify-between py-2 mx-auto w-max border-b-2 border-gray-800;
+  @apply flex flex-row items-center justify-between py-2 mx-auto w-full border-b-2 border-gray-800;
 }
 
 .hide {
@@ -95,7 +95,7 @@ export default {
 }
 
 .checkicon {
-  @apply mr-2 w-4;
+  @apply mr-2 w-4 cursor-pointer;
 }
 
 .green {

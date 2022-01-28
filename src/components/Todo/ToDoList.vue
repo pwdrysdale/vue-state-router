@@ -1,5 +1,5 @@
 <template>
-  <div class="px-10 mx-auto ToDos">
+  <div class="container mx-auto">
     <h3 class="text-center">To Do's</h3>
     <div class="button-group">
       <button v-on:click="changeSortCategory">{{ sort }}</button>
@@ -103,6 +103,6 @@ export default {
 
 <style scoped>
 .list {
-  @apply flex flex-col items-center justify-center mx-auto w-max;
+  @apply flex flex-col items-center justify-center mx-auto w-full;
 }
 </style>
