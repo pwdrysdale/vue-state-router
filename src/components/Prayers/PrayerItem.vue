@@ -61,13 +61,13 @@ export default {
     prayerName: String,
     prayerText: String,
     createdDate: Date,
-    prayedDates: Array,
+    prayedDates: Array[Date],
     answered: Boolean,
   },
   computed: {
     nameModel: {
       get() {
-        return this.prayerName;
+        return this.prayerName || "";
       },
       set(name) {
         this.$store.dispatch("setPrayerName", { id: this.id, name });
@@ -75,7 +75,7 @@ export default {
     },
     textModel: {
       get() {
-        return this.prayerText;
+        return this.prayerText || "";
       },
       set(text) {
         // console.log("set text", text);

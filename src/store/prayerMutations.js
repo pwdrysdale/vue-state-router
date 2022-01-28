@@ -1,6 +1,6 @@
 export default {
   loadPrayers(state, prayers) {
-    state.prayers = prayers;
+    state.prayers = prayers || [];
   },
 
   addPrayer(state, prayer) {

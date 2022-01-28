@@ -37,11 +37,18 @@ export default {
   },
   computed: {
     prayers() {
-      return [...this.$store.state.prayers]
-        .filter((a) => !this.hideAnswered || !a.answered)
-        .sort((a, b) =>
-          this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
-        );
+      console.log("getting prayers");
+      console.log(this.$store.state.prayers);
+      return this.$store.state.prayers
+        ? [...this.$store.state.prayers]
+            .filter((a) => {
+              console.log("filter");
+              return !this.hideAnswered || !a.answered;
+            })
+            .sort((a, b) =>
+              this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
+            )
+        : [];
     },
   },
 
@@ -68,6 +75,7 @@ export default {
         this.sortOrder === "Ascending" ? "Descending" : "Ascending";
     },
     sortPrayers(a, b, sortOrder, sortCategory) {
+      console.log("sorting prayers");
       if (sortCategory === "Random") {
         return Math.random() - 0.5;
       }
