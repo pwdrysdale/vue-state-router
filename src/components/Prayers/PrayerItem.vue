@@ -21,12 +21,13 @@
     <div class="flex flex-col items-end justify-end">
       <div class="flex flex-col text-sm italic text-right text-gray-400">
         {{
-          lastPrayedDate === null
+          id &&
+          (lastPrayedDate === null
             ? "Not yet prayed"
             : "Prayed " +
               prayedDates.length +
               " time" +
-              (prayedDates.length === 1 ? "" : "s")
+              (prayedDates.length === 1 ? "" : "s"))
         }}
         <br v-if="lastPrayedDate" />
         {{ lastPrayedDate && "Last time " + lastPrayedDate }}

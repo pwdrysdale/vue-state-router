@@ -45,8 +45,7 @@ export default {
 
   removePrayer(context, id) {
     context.commit("removePrayer", id);
-    context.commit("setInLocalStorage");
-    context.dispatch("setInLocalStorage");
+    context.dispatch("setPrayersInLocal");
   },
 
   setPrayerName(context, payload) {
