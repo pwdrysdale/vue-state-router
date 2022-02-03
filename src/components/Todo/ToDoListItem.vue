@@ -2,7 +2,7 @@
   <div class="item">
     <input
       type="checkbox"
-      v-model="todo.completed"
+      v-model="completedModel"
       :id="todo.id"
       class="hide"
     />
@@ -64,6 +64,18 @@ export default {
         this.$store.dispatch("setTodo", {
           ...this.todo,
           text: value,
+        });
+        this.setInLocal();
+      },
+    },
+    completedModel: {
+      get() {
+        return this.todo.completed;
+      },
+      set(value) {
+        this.$store.dispatch("setTodo", {
+          ...this.todo,
+          completed: value,
         });
         this.setInLocal();
       },

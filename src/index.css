@@ -8,6 +8,14 @@
   font-family: "Merriweather", serif;
 }
 
+body {
+  @apply p-0 m-0 text-white bg-black;
+}
+
+#app {
+  @apply min-h-screen bg-blue-400;
+}
+
 input,
 textarea {
   @apply p-2 bg-transparent rounded-md outline-none;
@@ -34,8 +42,12 @@ h3 {
   @apply text-3xl font-bold;
 }
 
+.small-text {
+  @apply text-sm italic text-gray-400;
+}
+
 button {
-  @apply px-4 py-2 text-white transition-all duration-200 ease-in-out bg-blue-900 hover:bg-blue-500;
+  @apply px-4 py-2 text-white transition-all duration-200 ease-in-out bg-blue-900 rounded-md hover:bg-blue-500;
 }
 
 .button-group {

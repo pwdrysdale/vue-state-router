@@ -10,6 +10,11 @@ const routes = [
     component: () => import("../components/Prayers/PrayerScreen.vue"),
   },
   {
+    path: "/reading",
+    name: "BibleReading",
+    component: () => import("../components/BibleReading/Progress.vue"),
+  },
+  {
     path: "/counter",
     name: "Counter",
     component: () => import("../components/Counter/HelloWorld.vue"),

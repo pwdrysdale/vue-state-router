@@ -1,8 +1,8 @@
 <template>
   <div
-    class="container flex items-end justify-between gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
+    class="container flex flex-col items-end justify-between gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
   >
-    <div class="flex flex-col self-start flex-1">
+    <div class="flex flex-col self-start flex-1 w-full">
       <input
         v-model="nameModel"
         class="h-full font-bold"
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="flex flex-col items-end justify-end">
-      <div class="flex flex-col text-sm italic text-right text-gray-400">
+      <div class="flex flex-col text-right small-text">
         {{
           id &&
           (lastPrayedDate === null
@@ -78,7 +78,7 @@ export default {
         return this.prayerText || "";
       },
       set(text) {
-        // console.log("set text", text);
+        console.log("Prayer set text");
         this.$store.dispatch("setPrayerText", { id: this.id, text });
       },
     },

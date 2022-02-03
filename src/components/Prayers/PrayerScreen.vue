@@ -37,12 +37,9 @@ export default {
   },
   computed: {
     prayers() {
-      console.log("getting prayers");
-      console.log(this.$store.state.prayers);
       return this.$store.state.prayers
         ? [...this.$store.state.prayers]
             .filter((a) => {
-              console.log("filter");
               return !this.hideAnswered || !a.answered;
             })
             .sort((a, b) =>
@@ -75,14 +72,13 @@ export default {
         this.sortOrder === "Ascending" ? "Descending" : "Ascending";
     },
     sortPrayers(a, b, sortOrder, sortCategory) {
-      console.log("sorting prayers");
       if (sortCategory === "Random") {
         return Math.random() - 0.5;
       }
       if (sortCategory === "Created Date") {
         return sortOrder === "Ascending"
-          ? a.createdAt - b.createdAt
-          : b.createdAt - a.createdAt;
+          ? a.createdDate - b.createdDate
+          : b.createdDate - a.createdDate;
       } else if (sortCategory === "Last Prayed") {
         return sortOrder === "Ascending"
           ? a.prayedDates.length === 0
