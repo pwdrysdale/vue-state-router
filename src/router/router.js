@@ -29,6 +29,11 @@ const routes = [
     name: "TimerScreen",
     component: () => import("../components/Timer/TimerScreen.vue"),
   },
+  {
+    path: "/weather",
+    name: "Weather",
+    component: () => import("../components/Weather/WeatherScreen.vue"),
+  },
 ];
 
 const router = new VueRouter({

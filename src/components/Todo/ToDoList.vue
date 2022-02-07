@@ -11,7 +11,9 @@
 
     <div class="flex w-full button-group">
       <input type="text" v-model="newTodo" placeholder="Add a to do here..." />
-      <button v-on:click="addTodo">Add Todo</button>
+      <button v-on:click="addTodo">
+        <font-awesome-icon icon="plus" />
+      </button>
       <button @click="clearCompleted">Clear Completed</button>
       <button @click="clearAll">Clear All</button>
     </div>

@@ -6,6 +6,7 @@
         v-for="(passage, index) in day.readings"
         :key="index"
         @click="goToLink(passage[0], passage[1])"
+        class="bg-pink-900"
       >
         {{ passage[0] + " " + passage[1] }}
       </button>

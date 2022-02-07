@@ -5,18 +5,19 @@
     <div class="button-group">
       <button @click="changeSortCategory">{{ sortCategory }}</button>
       <button @click="changeSortOrder">{{ sortOrder }}</button>
+      <button @click="toggleHideAnswered">
+        {{ hideAnswered ? "Unhide Answered" : "Hide Answered" }}
+      </button>
+      <button @click="addPrayer">
+        <font-awesome-icon icon="plus" />
+      </button>
     </div>
+    <div class="button-group"></div>
     <PrayerItem
       v-for="prayer in prayers"
       v-bind:key="prayer.id"
       v-bind="{ ...prayer }"
     />
-    <div class="button-group">
-      <button @click="addPrayer">Add Prayer</button>
-      <button @click="toggleHideAnswered">
-        {{ hideAnswered ? "Unhide Answered" : "Hide Answered" }}
-      </button>
-    </div>
   </div>
 </template>
 
@@ -30,7 +31,7 @@ export default {
   },
   data() {
     return {
-      sortOrder: "Ascending",
+      sortOrder: "Descending",
       sortCategory: "Created Date",
       hideAnswered: false,
     };
