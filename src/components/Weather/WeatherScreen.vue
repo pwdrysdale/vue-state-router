@@ -1,88 +1,95 @@
 <template>
-  <div>
-    <h3>
+  <div class="container flex flex-col items-center mx-auto">
+    <h3 class="text-center">
       Current Weather<span v-if="this.returnedLocation.name">
         for {{ this.returnedLocation.name }}</span
       >
     </h3>
-    <label for="apiKey">API Key: </label>
-    <input v-model="apiModel" id="apiKey" />
-    <label for="location">Location: </label>
-    <input v-model="locationModel" id="location" />
-    <button @click="toggleUnits">{{ this.weatherPrefs.units }}</button>
-    <button @click="getCurrent">Get Weather</button>
-    <div v-if="this.returnedLocation.name">
-      <h3>Location</h3>
-      <p>
-        {{ this.returnedLocation.name }}, {{ this.returnedLocation.region }},
-        {{ this.returnedLocation.country }}
-      </p>
-
-      <p>Latitude: {{ this.returnedLocation.lat }}</p>
-      <p>Longitude: {{ this.returnedLocation.lon }}</p>
-      <p>
-        Local Time:
-        {{ this.returnedLocation.localtime }}
-      </p>
-      <p>Timezome: {{ this.returnedLocation.tz_id }}</p>
+    <div class="items-center button-group">
+      <label for="apiKey">API Key: </label>
+      <input v-model="apiModel" id="apiKey" />
+      <label for="location">Location: </label>
+      <input v-model="locationModel" id="location" />
+      <button @click="toggleUnits">{{ this.weatherPrefs.units }}</button>
     </div>
-    <div v-if="this.returnedLocation.name">
-      <h3>Current Weather</h3>
-      <p>
-        Current Temperature:
-        {{
-          this.weatherPrefs.units === "Metric"
-            ? this.weather.temp_c + "°C"
-            : this.weather.temp_f + "°F"
-        }}
-      </p>
-      <p>{{ this.weather.condition.text }}</p>
+    <button @click="getCurrent" class="mx-auto">Get Weather</button>
+    <div class="flex flex-col gap-2 py-2">
+      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+        <h3>Location</h3>
+        <p>
+          {{ this.returnedLocation.name }}, {{ this.returnedLocation.region }},
+          {{ this.returnedLocation.country }}
+        </p>
 
-      <p>
-        Feels Like:
-        {{
-          this.weatherPrefs.units === "Metric"
-            ? this.weather.feelslike_c + "°C"
-            : this.weather.feelslike_f + "°F"
-        }}
-      </p>
-      <p>
-        UV Index:
-        {{ this.weather.uv }}
-      </p>
-      <p>Cloud Cover: {{ this.weather.cloud }}%</p>
-      <p>Humidity: {{ this.weather.humidity }}%</p>
-      <p>
-        Wind Gusts:
-        {{
-          this.weatherPrefs.units === "Metric"
-            ? this.weather.gust_kph + "kph"
-            : this.weather.gust_mph + "mph"
-        }}
-      </p>
+        <p>Latitude: {{ this.returnedLocation.lat }}</p>
+        <p>Longitude: {{ this.returnedLocation.lon }}</p>
+        <p>
+          Local Time:
+          {{ this.returnedLocation.localtime }}
+        </p>
+        <p>Timezome: {{ this.returnedLocation.tz_id }}</p>
+      </div>
+      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+        <h3>Current Weather</h3>
+        <p>
+          Current Temperature:
+          {{
+            this.weatherPrefs.units === "Metric"
+              ? this.weather.temp_c + "°C"
+              : this.weather.temp_f + "°F"
+          }}
+        </p>
+        <p>{{ this.weather.condition.text }}</p>
 
-      <p>
-        Wind Speed:
-        {{
-          this.weatherPrefs.units === "Metric"
-            ? this.weather.wind_kph + " kph"
-            : this.weather.wind_mph + " mph"
-        }}
-      </p>
-      <p>
-        Wind Direction:
-        {{
-          this.weather.wind_degree + " degrees (" + this.weather.wind_dir + ")"
-        }}
-      </p>
-      <p>
-        Pressure:
-        {{
-          this.weatherPrefs.units === "Metric"
-            ? this.weather.pressure_mb + " mb"
-            : this.weather.pressure_in + " in"
-        }}
-      </p>
+        <p>
+          Feels Like:
+          {{
+            this.weatherPrefs.units === "Metric"
+              ? this.weather.feelslike_c + "°C"
+              : this.weather.feelslike_f + "°F"
+          }}
+        </p>
+        <p>
+          UV Index:
+          {{ this.weather.uv }}
+        </p>
+        <p>Cloud Cover: {{ this.weather.cloud }}%</p>
+        <p>Humidity: {{ this.weather.humidity }}%</p>
+        <p>
+          Wind Gusts:
+          {{
+            this.weatherPrefs.units === "Metric"
+              ? this.weather.gust_kph + "kph"
+              : this.weather.gust_mph + "mph"
+          }}
+        </p>
+
+        <p>
+          Wind Speed:
+          {{
+            this.weatherPrefs.units === "Metric"
+              ? this.weather.wind_kph + " kph"
+              : this.weather.wind_mph + " mph"
+          }}
+        </p>
+        <p>
+          Wind Direction:
+          {{
+            this.weather.wind_degree +
+            " degrees (" +
+            this.weather.wind_dir +
+            ")"
+          }}
+        </p>
+        <p>
+          Pressure:
+          {{
+            this.weatherPrefs.units === "Metric"
+              ? this.weather.pressure_mb + " mb"
+              : this.weather.pressure_in + " in"
+          }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -97,37 +104,35 @@ export default {
   data: function () {
     return {
       apiKey: "",
-      weatherPrefs: {
-        units: "Metric",
-        location: "",
-        apiKey: "",
-      },
       returnedLocation: {},
     };
   },
   computed: {
+    weatherPrefs() {
+      return this.$store.state.weatherPrefs;
+    },
+
     apiModel: {
       get() {
-        return this.weatherPrefs.apiKey;
+        return this.$store.state.weatherPrefs.apiKey;
       },
       set(apiKey) {
-        console.log(apiKey);
-        this.weatherPrefs.apiKey = apiKey;
+        this.$store.dispatch("weatherPrefs/setApiKey", apiKey);
       },
     },
     locationModel: {
       get() {
-        return this.weatherPrefs.location;
+        return this.$store.state.weatherPrefs.location;
       },
       set(location) {
-        this.weatherPrefs.location = location;
+        this.$store.dispatch("weatherPrefs/setLocation", location);
+        // this.weatherPrefs.location = location;
       },
     },
   },
   methods: {
     toggleUnits() {
-      this.weatherPrefs.units =
-        this.weatherPrefs.units === "Metric" ? "Imperial" : "Metric";
+      this.$store.dispatch("weatherPrefs/toggleUnits");
     },
 
     async getCurrent() {
@@ -153,6 +158,12 @@ export default {
       }
     },
     // async method to get current weather
+  },
+  created() {
+    this.$store.dispatch("weatherPrefs/loadWeatherPrefs");
+    if (this.weatherPrefs.apiKey !== "") {
+      this.getCurrent();
+    }
   },
 };
 </script>

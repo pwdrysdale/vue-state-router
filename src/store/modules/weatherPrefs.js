@@ -8,10 +8,12 @@ export const state = {
 
 export const mutations = {
   SET_WEATHER_PREFS(state, payload) {
-    state = payload;
+    Object.keys(payload).forEach((key) => {
+      state[key] = payload[key];
+    });
   },
-  TOGGLE_UNITS(state, units) {
-    state.units = units;
+  TOGGLE_UNITS(state) {
+    state.units = state.units === "Metric" ? "Imperial" : "Metric";
   },
   SET_API_KEY(state, apiKey) {
     state.apiKey = apiKey;
