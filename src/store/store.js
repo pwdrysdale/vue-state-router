@@ -23,6 +23,8 @@ import prayerActions from "./prayerActions";
 import readingMutations from "./readingMutations";
 import readingActions from "./readingActions";
 
+import * as weatherPrefs from "./modules/weatherPrefs";
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -51,6 +53,9 @@ const store = new Vuex.Store({
     ...todoActions,
     ...counterActions,
     ...appNameActions,
+  },
+  modules: {
+    weatherPrefs,
   },
 });
 
