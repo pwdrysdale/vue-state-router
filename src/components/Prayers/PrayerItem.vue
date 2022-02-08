@@ -70,7 +70,7 @@ export default {
         return this.prayerName || "";
       },
       set(name) {
-        this.$store.dispatch("setPrayerName", { id: this.id, name });
+        this.$store.dispatch("prayers/setPrayerName", { id: this.id, name });
       },
     },
     textModel: {
@@ -79,7 +79,7 @@ export default {
       },
       set(text) {
         console.log("Prayer set text");
-        this.$store.dispatch("setPrayerText", { id: this.id, text });
+        this.$store.dispatch("prayers/setPrayerText", { id: this.id, text });
       },
     },
     lastPrayedDate: {
@@ -94,13 +94,13 @@ export default {
   },
   methods: {
     removePrayer() {
-      this.$store.dispatch("removePrayer", this.id);
+      this.$store.dispatch("prayers/removePrayer", this.id);
     },
     prayed() {
-      this.$store.dispatch("addPrayerDate", this.id);
+      this.$store.dispatch("prayers/addPrayerDate", this.id);
     },
     setAsAnswered() {
-      this.$store.dispatch("setPrayerAnswered", this.id);
+      this.$store.dispatch("prayers/setPrayerAnswered", this.id);
     },
   },
 };

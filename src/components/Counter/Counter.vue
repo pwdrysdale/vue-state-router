@@ -40,7 +40,7 @@ export default {
         return this.name;
       },
       set(name) {
-        this.$store.dispatch("setCounterName", { id: this.id, name });
+        this.$store.dispatch("counters/setCounterName", { id: this.id, name });
       },
     },
     counterModel: {
@@ -48,7 +48,7 @@ export default {
         return parseFloat(this.count);
       },
       set(count) {
-        this.$store.dispatch("setCounterCount", {
+        this.$store.dispatch("counters/setCounterCount", {
           id: this.id,
           count: parseFloat(count),
         });
@@ -59,7 +59,7 @@ export default {
         return parseFloat(this.increment);
       },
       set(increment) {
-        this.$store.dispatch("setCounterIncrement", {
+        this.$store.dispatch("counters/setCounterIncrement", {
           id: this.id,
           increment: parseFloat(increment),
         });
@@ -68,16 +68,16 @@ export default {
   },
   methods: {
     incrementCounter() {
-      this.$store.dispatch("incrementCounter", this.id);
+      this.$store.dispatch("counters/incrementCounter", this.id);
     },
     decrementCounter() {
-      this.$store.dispatch("decrementCounter", this.id);
+      this.$store.dispatch("counters/decrementCounter", this.id);
     },
     resetCounter() {
-      this.$store.dispatch("resetCounter", this.id);
+      this.$store.dispatch("counters/resetCounter", this.id);
     },
     removeCounter() {
-      this.$store.dispatch("removeCounter", this.id);
+      this.$store.dispatch("counters/removeCounter", this.id);
     },
   },
 };

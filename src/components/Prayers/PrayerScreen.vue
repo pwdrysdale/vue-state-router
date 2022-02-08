@@ -38,8 +38,8 @@ export default {
   },
   computed: {
     prayers() {
-      return this.$store.state.prayers
-        ? [...this.$store.state.prayers]
+      return this.$store.state.prayers.prayers
+        ? [...this.$store.state.prayers.prayers]
             .filter((a) => {
               return !this.hideAnswered || !a.answered;
             })
@@ -127,7 +127,7 @@ export default {
     },
   },
   created: function () {
-    this.$store.dispatch("getPrayersFromLocal");
+    this.$store.dispatch("prayers/getPrayersFromLocal");
   },
 };
 </script>

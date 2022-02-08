@@ -16,6 +16,7 @@
 
 <script>
 import Counter from "./Counter.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "HelloWorld",
@@ -26,18 +27,11 @@ export default {
     return { sortBy: "Created Date", sortOrder: "Ascending" };
   },
   computed: {
-    count() {
-      return this.$store.state.count;
-    },
-    counters() {
-      return [...this.$store.state.counters].sort((a, b) =>
-        this.sortFn(a, b, this.sortBy, this.sortOrder)
-      );
-    },
+    ...mapState({ counters: (state) => state.counters.counters }),
   },
   methods: {
     addCounter() {
-      return this.$store.dispatch("addCounter");
+      return this.$store.dispatch("counters/addCounter");
     },
     toggleSortOrder() {
       this.sortOrder =
@@ -71,7 +65,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("getCountersFromLocalStorage");
+    this.$store.dispatch("counters/getCountersFromLocalStorage");
   },
 };
 </script>

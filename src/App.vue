@@ -21,15 +21,15 @@ export default {
   computed: {
     name: {
       get() {
-        return this.$store.state.name;
+        return this.$store.state.appName.name;
       },
       set(name) {
-        this.$store.dispatch("setName", name);
+        this.$store.dispatch("appName/setName", name);
       },
     },
   },
   created() {
-    this.$store.dispatch("loadName");
+    this.$store.dispatch("appName/loadName");
   },
 };
 </script>

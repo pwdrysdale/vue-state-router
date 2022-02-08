@@ -20,7 +20,6 @@
           {{ this.returnedLocation.name }}, {{ this.returnedLocation.region }},
           {{ this.returnedLocation.country }}
         </p>
-
         <p>Latitude: {{ this.returnedLocation.lat }}</p>
         <p>Longitude: {{ this.returnedLocation.lon }}</p>
         <p>
@@ -98,6 +97,7 @@
 import axios from "axios";
 // import moment from "moment";
 import moment from "moment-timezone";
+import { mapState } from "vuex";
 
 export default {
   name: "WeatherScreen",
@@ -108,9 +108,7 @@ export default {
     };
   },
   computed: {
-    weatherPrefs() {
-      return this.$store.state.weatherPrefs;
-    },
+    ...mapState(["weatherPrefs"]),
 
     apiModel: {
       get() {
@@ -130,6 +128,7 @@ export default {
       },
     },
   },
+
   methods: {
     toggleUnits() {
       this.$store.dispatch("weatherPrefs/toggleUnits");
