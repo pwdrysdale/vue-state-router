@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Timer from "./Timer.vue";
+import Timer from "./Timer.vue"
 
 export default {
   name: "TimerScreen",
@@ -25,14 +25,14 @@ export default {
 
   computed: {
     timers() {
-      return this.$store.state.timers;
+      return this.$store.state.timers.timers
     },
   },
 
   methods: {
     addTimer() {
-      this.$store.commit("addTimer");
+      this.$store.commit("timers/addTimer")
     },
   },
-};
+}
 </script>

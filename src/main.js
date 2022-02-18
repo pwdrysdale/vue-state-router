@@ -16,7 +16,7 @@ import {
   faPlay,
   faStop,
   faPray,
-  faPlus,
+  faPlus,  
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -33,6 +33,7 @@ library.add([
   faStop,
   faPray,
   faPlus,
+  
 ]);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);

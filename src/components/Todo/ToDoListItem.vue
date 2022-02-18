@@ -6,8 +6,20 @@
       :id="todo.id"
       class="hide"
     />
-    <label v-bind:key="todo.id" :for="todo.id">
-      <font-awesome-icon
+    <label
+      :key="todo.id"
+      :for="todo.id"
+      class="w-12 py-2 text-center text-white transition-all duration-200 ease-in-out rounded-md"
+      :class="
+        todo.completed
+          ? 'bg-green-800 hover:bg-green-500'
+          : 'bg-red-800  hover:bg-red-500'
+      "
+    >
+      <font-awesome-icon v-if="todo.completed" icon="check" />
+      <font-awesome-icon v-if="!todo.completed" icon="times" />
+
+      <!-- <font-awesome-icon
         icon="check"
         v-if="todo.completed"
         class="checkicon green"
@@ -16,7 +28,7 @@
         icon="times"
         v-if="!todo.completed"
         class="checkicon red"
-      />
+      /> -->
     </label>
     <textarea-autosize autosize rows="1" v-model="textModel" />
     <input
@@ -58,43 +70,43 @@ export default {
   computed: {
     textModel: {
       get() {
-        return this.todo.text;
+        return this.todo.text
       },
       set(value) {
-        this.$store.dispatch("setTodo", {
+        this.$store.dispatch("todos/setTodo", {
           ...this.todo,
           text: value,
-        });
-        this.setInLocal();
+        })
+        this.setInLocal()
       },
     },
     completedModel: {
       get() {
-        return this.todo.completed;
+        return this.todo.completed
       },
       set(value) {
-        this.$store.dispatch("setTodo", {
+        this.$store.dispatch("todos/setTodo", {
           ...this.todo,
           completed: value,
-        });
-        this.setInLocal();
+        })
+        this.setInLocal()
       },
     },
   },
   methods: {
     removeTodo(todo) {
-      this.$store.dispatch("removeTodo", todo);
+      this.$store.dispatch("todos/removeTodo", todo)
     },
     setDate(date, todo) {
-      const dueDate = new Date(date);
-      this.$store.dispatch("setTodo", { ...todo, dueDate });
-      todo.dueDate = new Date(this.$el.value);
+      const dueDate = new Date(date)
+      this.$store.dispatch("todos/setTodo", { ...todo, dueDate })
+      todo.dueDate = new Date(this.$el.value)
     },
     setInLocal() {
-      this.$store.dispatch("setInLocal");
+      this.$store.dispatch("todos/setInLocal")
     },
   },
-};
+}
 </script>
 
 <style scoped>

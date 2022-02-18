@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment from "moment"
 
 export default {
   name: "ReflectionItem",
@@ -39,46 +39,45 @@ export default {
   computed: {
     modifiedDate: {
       get() {
-        return moment(this.dateModified).startOf("minute").fromNow();
+        return moment(this.dateModified).startOf("minute").fromNow()
       },
     },
 
     titleModel: {
       get() {
-        return this.title;
+        return this.title
       },
       set(title) {
-        console.log("Called set title");
-        this.$store.dispatch("setReflectionTitle", {
+        console.log("Called set title")
+        this.$store.dispatch("readings/setReflectionTitle", {
           reflectionId: this.id,
           id: this.parentId,
           title,
-        });
+        })
       },
     },
     textModel: {
       get() {
-        return this.text;
+        return this.text
       },
       set(text) {
-        console.log("Called set text");
         if (text !== this.text) {
-          this.$store.dispatch("setReflectionText", {
+          this.$store.dispatch("readings/setReflectionText", {
             reflectionId: this.id,
             id: this.parentId,
             text,
-          });
+          })
         }
       },
     },
   },
   methods: {
     removeReflection() {
-      this.$store.dispatch("removeReflection", {
+      this.$store.dispatch("readings/removeReflection", {
         id: this.parentId,
         reflectionId: this.id,
-      });
+      })
     },
   },
-};
+}
 </script>

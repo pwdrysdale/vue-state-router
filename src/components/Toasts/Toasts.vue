@@ -26,8 +26,8 @@ export default {
   name: "Toasts",
   computed: {
     toasts() {
-      return this.$store.state.toasts;
+      return this.$store.state.toasts.toasts
     },
   },
-};
+}
 </script>

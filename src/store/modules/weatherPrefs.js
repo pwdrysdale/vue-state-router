@@ -1,53 +1,61 @@
-export const namespaced = true;
+export const namespaced = true
+
+// =============================================================================
 
 export const state = {
   units: "Metric",
   apiKey: "",
   location: "",
-};
+}
+
+// =============================================================================
 
 export const mutations = {
   SET_WEATHER_PREFS(state, payload) {
     Object.keys(payload).forEach((key) => {
-      state[key] = payload[key];
-    });
+      state[key] = payload[key]
+    })
   },
   TOGGLE_UNITS(state) {
-    state.units = state.units === "Metric" ? "Imperial" : "Metric";
+    state.units = state.units === "Metric" ? "Imperial" : "Metric"
   },
   SET_API_KEY(state, apiKey) {
-    state.apiKey = apiKey;
+    state.apiKey = apiKey
   },
   SET_LOCATION(state, location) {
-    state.location = location;
+    state.location = location
   },
-};
+}
+
+// =============================================================================
 
 export const actions = {
   saveWeatherPrefs() {
     localStorage.setItem(
       "weatherPrefs",
       JSON.stringify(this.state.weatherPrefs)
-    );
+    )
   },
   loadWeatherPrefs({ commit }) {
-    const weatherPrefs = JSON.parse(localStorage.getItem("weatherPrefs"));
+    const weatherPrefs = JSON.parse(localStorage.getItem("weatherPrefs"))
     if (weatherPrefs) {
-      commit("SET_WEATHER_PREFS", weatherPrefs);
+      commit("SET_WEATHER_PREFS", weatherPrefs)
     }
   },
   toggleUnits({ commit, dispatch }) {
-    commit("TOGGLE_UNITS");
-    dispatch("saveWeatherPrefs");
+    commit("TOGGLE_UNITS")
+    dispatch("saveWeatherPrefs")
   },
   setApiKey({ commit, dispatch }, apiKey) {
-    commit("SET_API_KEY", apiKey);
-    dispatch("saveWeatherPrefs");
+    commit("SET_API_KEY", apiKey)
+    dispatch("saveWeatherPrefs")
   },
   setLocation({ commit, dispatch }, location) {
-    commit("SET_LOCATION", location);
-    dispatch("saveWeatherPrefs");
+    commit("SET_LOCATION", location)
+    dispatch("saveWeatherPrefs")
   },
-};
+}
 
-export const getters = {};
+// =============================================================================
+
+export const getters = {}

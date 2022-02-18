@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment from "moment"
 
 export default {
   name: "PrayerItem",
@@ -67,19 +67,19 @@ export default {
   computed: {
     nameModel: {
       get() {
-        return this.prayerName || "";
+        return this.prayerName || ""
       },
       set(name) {
-        this.$store.dispatch("prayers/setPrayerName", { id: this.id, name });
+        this.$store.dispatch("prayers/setPrayerName", { id: this.id, name })
       },
     },
     textModel: {
       get() {
-        return this.prayerText || "";
+        return this.prayerText || ""
       },
       set(text) {
-        console.log("Prayer set text");
-        this.$store.dispatch("prayers/setPrayerText", { id: this.id, text });
+        console.log("Prayer set text")
+        this.$store.dispatch("prayers/setPrayerText", { id: this.id, text })
       },
     },
     lastPrayedDate: {
@@ -88,20 +88,20 @@ export default {
           ? moment(this.prayedDates[this.prayedDates.length - 1])
               .startOf("minute")
               .fromNow()
-          : null;
+          : null
       },
     },
   },
   methods: {
     removePrayer() {
-      this.$store.dispatch("prayers/removePrayer", this.id);
+      this.$store.dispatch("prayers/removePrayer", this.id)
     },
     prayed() {
-      this.$store.dispatch("prayers/addPrayerDate", this.id);
+      this.$store.dispatch("prayers/addPrayerDate", this.id)
     },
     setAsAnswered() {
-      this.$store.dispatch("prayers/setPrayerAnswered", this.id);
+      this.$store.dispatch("prayers/setPrayerAnswered", this.id)
     },
   },
-};
+}
 </script>

@@ -3,7 +3,10 @@
     <h3 class="text-center">To Do's</h3>
     <div class="button-group">
       <button v-on:click="changeSortCategory">{{ sort }}</button>
-      <button v-on:click="changeSortOrder">{{ sortOrder }}</button>
+      <button v-on:click="changeSortOrder">
+        <font-awesome-icon v-if="sortOrder === 'Ascending'" icon="arrow-up" />
+        <font-awesome-icon v-else icon="arrow-down" />
+      </button>
     </div>
     <div class="list">
       <ToDoListItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" />
@@ -21,7 +24,7 @@
 </template>
 
 <script>
-import ToDoListItem from "../Todo/ToDoListItem.vue";
+import ToDoListItem from "../Todo/ToDoListItem.vue"
 
 export default {
   name: "ToDoList",
@@ -30,19 +33,19 @@ export default {
       newTodo: "",
       sort: "Created Date",
       sortOrder: "Ascending",
-    };
+    }
   },
   computed: {
     todos() {
-      return [...this.$store.state.todos].sort((a, b) =>
+      return [...this.$store.state.todos.todos].sort((a, b) =>
         this.sortBy(a, b, this.sort, this.sortOrder)
-      );
+      )
     },
   },
   methods: {
     addTodo() {
-      this.$store.dispatch("addTodo", this.newTodo);
-      this.newTodo = "";
+      this.$store.dispatch("todos/addTodo", this.newTodo)
+      this.newTodo = ""
     },
     changeSortCategory() {
       const options = [
@@ -51,34 +54,34 @@ export default {
         "Priority",
         "Completed",
         "Todo Text",
-      ];
-      const index = options.indexOf(this.sort);
-      const nextIndex = (index + 1) % options.length;
-      this.sort = options[nextIndex];
+      ]
+      const index = options.indexOf(this.sort)
+      const nextIndex = (index + 1) % options.length
+      this.sort = options[nextIndex]
     },
     changeSortOrder() {
       this.sortOrder =
-        this.sortOrder === "Ascending" ? "Descending" : "Ascending";
+        this.sortOrder === "Ascending" ? "Descending" : "Ascending"
     },
     clearCompleted() {
-      this.$store.dispatch("clearCompleted");
+      this.$store.dispatch("todos/clearCompleted")
     },
     clearAll() {
-      this.$store.dispatch("clearAll");
+      this.$store.dispatch("todos/clearAll")
     },
     sortBy(a, b, sort, sortOrder) {
       if (sort === "Created Date") {
         return sortOrder === "Ascending"
           ? a.createdDate - b.createdDate
-          : b.createdDate - a.createdDate;
+          : b.createdDate - a.createdDate
       } else if (sort === "Due Date") {
         return sortOrder === "Ascending"
           ? a.dueDate - b.dueDate
-          : b.dueDate - a.dueDate;
+          : b.dueDate - a.dueDate
       } else if (sort === "Priority") {
         return sortOrder === "Ascending"
           ? a.priority - b.priority
-          : b.priority - a.priority;
+          : b.priority - a.priority
       } else if (sort === "Completed") {
         return sortOrder === "Ascending"
           ? a.completed
@@ -86,21 +89,21 @@ export default {
             : 1
           : a.completed
           ? 1
-          : -1;
+          : -1
       } else if (sort === "Todo Text") {
         return sortOrder === "Ascending"
           ? a.text.localeCompare(b.text)
-          : b.text.localeCompare(a.text);
+          : b.text.localeCompare(a.text)
       }
     },
   },
   async created() {
-    this.$store.dispatch("getTodosFromLocal");
+    this.$store.dispatch("todos/getTodosFromLocal")
   },
   components: {
     ToDoListItem,
   },
-};
+}
 </script>
 
 <style scoped>

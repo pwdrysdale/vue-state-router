@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import ReadingItem from "./ReadingItem.vue";
+import ReadingItem from "./ReadingItem.vue"
 
 export default {
   name: "Progress",
@@ -43,73 +43,73 @@ export default {
   data() {
     return {
       filter: "1-1",
-    };
+    }
   },
   computed: {
     plan() {
-      const all = this.$store.state.reading;
+      const all = this.$store.state.readings.reading
       if (this.filter === "0-1") {
-        return [all.find((day) => day.completedDate === null)];
+        return [all.find((day) => day.completedDate === null)]
       } else if (this.filter === "1-1") {
         const lastCompletedIndex = all.reduce(
           (acc, day, index) => (day.completedDate ? index : acc),
           0
-        );
-        return all.slice(lastCompletedIndex, lastCompletedIndex + 2);
+        )
+        return all.slice(lastCompletedIndex, lastCompletedIndex + 2)
       } else if (this.filter === "2-1") {
         const lastCompletedIndex = all.reduce(
           (acc, day, index) => (day.completedDate ? index : acc),
           0
-        );
+        )
         return all.slice(
           Math.max(0, lastCompletedIndex - 1),
           lastCompletedIndex + 2
-        );
+        )
       } else if (this.filter === "5-1") {
         const lastCompletedIndex = all.reduce(
           (acc, day, index) => (day.completedDate ? index : acc),
           0
-        );
+        )
         return all.slice(
           Math.max(0, lastCompletedIndex - 4),
           lastCompletedIndex + 2
-        );
+        )
       } else if (this.filter === "10-0") {
         const lastCompletedIndex = all.reduce(
           (acc, day, index) => (day.completedDate ? index : acc),
           0
-        );
+        )
         return all.slice(
           Math.max(lastCompletedIndex - 10, 0),
           lastCompletedIndex + 2
-        );
+        )
       } else if (this.filter === "All Completed") {
-        return all.filter((day) => day.completedDate !== null);
+        return all.filter((day) => day.completedDate !== null)
       } else if (this.filter === "All Incomplete") {
-        return all.filter((day) => day.completedDate === null);
+        return all.filter((day) => day.completedDate === null)
       } else {
-        return all;
+        return all
       }
     },
     filterModel: {
       get() {
-        return this.filter;
+        return this.filter
       },
       set(value) {
-        this.filter = value;
+        this.filter = value
       },
     },
   },
   methods: {
     resetCompleted() {
-      this.$store.dispatch("resetCompleted");
+      this.$store.dispatch("readings/resetCompleted")
     },
     resetReflections() {
-      this.$store.dispatch("resetReflections");
+      this.$store.dispatch("readings/resetReflections")
     },
   },
   created() {
-    this.$store.dispatch("getReadingsFromLocal");
+    this.$store.dispatch("readings/getReadingsFromLocal")
   },
-};
+}
 </script>

@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import moment from "moment";
-import ReflectionItem from "./ReflectionItem.vue";
+import moment from "moment"
+import ReflectionItem from "./ReflectionItem.vue"
 
 export default {
   name: "ReadingItem",
@@ -61,24 +61,24 @@ export default {
   computed: {
     formattedCompletedDate() {
       if (this.day.completedDate) {
-        return moment(this.day.completedDate).fromNow();
+        return moment(this.day.completedDate).fromNow()
       }
-      return "";
+      return ""
     },
   },
   methods: {
     goToLink(book, verse) {
-      window.location.href = "https://www.esv.org/" + book + "+" + verse;
+      window.location.href = "https://www.esv.org/" + book + "+" + verse
     },
     addReflection() {
-      this.$store.dispatch("addReflection", this.day.id);
+      this.$store.dispatch("readings/addReflection", this.day.id)
     },
     setCompletedDate() {
-      this.$store.dispatch("setCompletedDate", this.day.id);
+      this.$store.dispatch("readings/setCompletedDate", this.day.id)
     },
     removeCompletedDate() {
-      this.$store.dispatch("removeCompletedDate", this.day.id);
+      this.$store.dispatch("readings/removeCompletedDate", this.day.id)
     },
   },
-};
+}
 </script>

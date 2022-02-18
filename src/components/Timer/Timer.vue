@@ -43,58 +43,58 @@ export default {
   computed: {
     name: {
       get() {
-        return this.timerName;
+        return this.timerName
       },
       set(name) {
-        this.setTimerName({ id: this.id, name });
+        this.setTimerName({ id: this.id, name })
       },
     },
   },
   methods: {
     removeTimer() {
-      this.$store.commit("removeTimer", this.id);
+      this.$store.commit("timers/removeTimer", this.id)
     },
     startTimer() {
-      this.$store.commit("startTimer", this.id);
+      this.$store.commit("timers/startTimer", this.id)
     },
     stopTimer() {
-      this.$store.commit("stopTimer", this.id);
+      this.$store.commit("timers/stopTimer", this.id)
     },
     restartTimer() {
-      this.$store.commit("resetTimer", this.id);
+      this.$store.commit("timers/resetTimer", this.id)
     },
     setTimerName(payload) {
-      this.$store.commit("setTimerName", payload);
+      this.$store.commit("timers/setTimerName", payload)
     },
 
     displayTime() {
       //format dd:hh:mm:ss
       // return "hello";
       let seconds =
-        this.time % 60 < 10 ? "0" + (this.time % 60) : this.time % 60;
+        this.time % 60 < 10 ? "0" + (this.time % 60) : this.time % 60
       let minutes =
         Math.floor(this.time / 60) % 60 < 10
           ? "0" + (Math.floor(this.time / 60) % 60)
-          : Math.floor(this.time / 60) % 60;
+          : Math.floor(this.time / 60) % 60
       let hours =
         Math.floor(this.time / 3600) % 24 < 10
           ? "0" + (Math.floor(this.time / 3600) % 24)
-          : Math.floor(this.time / 3600) % 24;
+          : Math.floor(this.time / 3600) % 24
       let days =
         Math.floor(this.time / 86400) < 10
           ? "0" + Math.floor(this.time / 86400)
-          : Math.floor(this.time / 86400);
+          : Math.floor(this.time / 86400)
       //return only when there are no zero values
       if (days === "00" && hours === "00" && minutes === "00") {
-        return parseFloat(seconds);
+        return parseFloat(seconds)
       } else if (days === "00" && hours === "00") {
-        return `${minutes}:${seconds}`;
+        return `${minutes}:${seconds}`
       } else if (days === "00") {
-        return `${hours}:${minutes}:${seconds}`;
+        return `${hours}:${minutes}:${seconds}`
       } else {
-        return `${days}:${hours}:${minutes}:${seconds}`;
+        return `${days}:${hours}:${minutes}:${seconds}`
       }
     },
   },
-};
+}
 </script>
