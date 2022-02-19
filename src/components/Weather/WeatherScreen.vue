@@ -89,15 +89,30 @@
           }}
         </p>
       </div>
+      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+        <h3>Forecast</h3>
+        <div v-for="(fcDay, idx) of this.forecast.forecastday" :key="idx">
+          {{
+            idx === 0
+              ? "Today"
+              : idx === 1
+              ? "Tomorrow"
+              : day(fcDay.date_epoch, this.current.tz_id)
+          }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-// import moment from "moment";
-import moment from "moment-timezone";
-import { mapState } from "vuex";
+import axios from "axios"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+
+dayjs.extend(utc)
+
+import { mapState } from "vuex"
 
 export default {
   name: "WeatherScreen",
@@ -105,25 +120,25 @@ export default {
     return {
       apiKey: "",
       returnedLocation: {},
-    };
+    }
   },
   computed: {
     ...mapState(["weatherPrefs"]),
 
     apiModel: {
       get() {
-        return this.$store.state.weatherPrefs.apiKey;
+        return this.$store.state.weatherPrefs.apiKey
       },
       set(apiKey) {
-        this.$store.dispatch("weatherPrefs/setApiKey", apiKey);
+        this.$store.dispatch("weatherPrefs/setApiKey", apiKey)
       },
     },
     locationModel: {
       get() {
-        return this.$store.state.weatherPrefs.location;
+        return this.$store.state.weatherPrefs.location
       },
       set(location) {
-        this.$store.dispatch("weatherPrefs/setLocation", location);
+        this.$store.dispatch("weatherPrefs/setLocation", location)
         // this.weatherPrefs.location = location;
       },
     },
@@ -131,38 +146,50 @@ export default {
 
   methods: {
     toggleUnits() {
-      this.$store.dispatch("weatherPrefs/toggleUnits");
+      this.$store.dispatch("weatherPrefs/toggleUnits")
+    },
+    day(dateEpoch, timezone) {
+      return dayjs.utc(dateEpoch, timezone).format("dddd")
     },
 
     async getCurrent() {
       try {
+        // const { data } = await axios.get(
+        //   "http://api.weatherapi.com/v1/current.json?key=" +
+        //     this.weatherPrefs.apiKey +
+        //     "&q=" +
+        //     this.weatherPrefs.location
+        // )
         const { data } = await axios.get(
-          "http://api.weatherapi.com/v1/current.json?key=" +
+          "http://api.weatherapi.com/v1/forecast.json?key=" +
             this.weatherPrefs.apiKey +
             "&q=" +
-            this.weatherPrefs.location
-        );
-
-        const m = moment
-          .tz(data.location.localtime, data.location.tz_id)
-          .format("MMMM Do YYYY, h:mm a");
+            this.weatherPrefs.location +
+            "&days=9"
+        )
+        console.log(data)
+        const m = dayjs
+          .utc(data.location.localtime, data.location.tz_id)
+          .format("MMMM Do YYYY, h:mm a")
 
         this.returnedLocation = {
           ...data.location,
           localtime: m,
-        };
-        this.weather = data.current;
+        }
+        this.weather = data.current
+
+        this.forecast = data.forecast
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     },
     // async method to get current weather
   },
   created() {
-    this.$store.dispatch("weatherPrefs/loadWeatherPrefs");
+    this.$store.dispatch("weatherPrefs/loadWeatherPrefs")
     if (this.weatherPrefs.apiKey !== "") {
-      this.getCurrent();
+      this.getCurrent()
     }
   },
-};
+}
 </script>

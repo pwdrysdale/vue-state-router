@@ -41,7 +41,10 @@ export const actions = {
   setTodo(context, payload) {
     // get todo from state
     const todo = context.state.todos.find((t) => t.id === payload.id)
-    if (todo.completed === false && payload.completed === true) {
+    if (
+      (todo.completed === false || !todo.completed) &&
+      payload.completed === true
+    ) {
       const textOptions = [
         "Good on you!",
         "Great job!",

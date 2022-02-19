@@ -112,10 +112,28 @@ export const actions = {
       prayedDates: [],
     }
     commit("ADD_PRAYER", prayer)
+    dispatch(
+      "toasts/addToasts",
+      {
+        text: ["Added!", "Keep at it!", "Pray unceasingly."][
+          Math.floor(Math.random() * 3)
+        ],
+        type: "success",
+      },
+      { root: true }
+    )
     dispatch("setPrayersInLocal")
   },
 
   removePrayer({ dispatch, commit }, id) {
+    dispatch(
+      "toasts/addToasts",
+      {
+        text: ["Gone!", "Done!"][Math.floor(Math.random() * 2)],
+        type: "success",
+      },
+      { root: true }
+    )
     commit("REMOVE_PRAYER", id)
     dispatch("setPrayersInLocal")
   },
@@ -132,10 +150,33 @@ export const actions = {
 
   addPrayerDate({ dispatch, commit }, id) {
     commit("ADD_PRAYER_DATE", id)
+    dispatch(
+      "toasts/addToasts",
+      {
+        text: ["Noted!", "Roger that!", "He is faithful!"][
+          Math.floor(Math.random() * 3)
+        ],
+        type: "success",
+      },
+      { root: true }
+    )
     dispatch("setPrayersInLocal")
   },
 
-  setPrayerAnswered({ dispatch, commit }, id) {
+  setPrayerAnswered({ dispatch, commit, state }, id) {
+    const prayer = state.prayers.find((p) => p.id === id)
+    if (!prayer.answered) {
+      dispatch(
+        "toasts/addToasts",
+        {
+          text: ["Let us be glad!", "Praise the Lord!", "How good is it?"][
+            Math.floor(Math.random() * 3)
+          ],
+          type: "success",
+        },
+        { root: true }
+      )
+    }
     commit("MARK_AS_ANSWERED", id)
     dispatch("setPrayersInLocal")
   },

@@ -31,7 +31,7 @@ export default {
 
   methods: {
     addTimer() {
-      this.$store.commit("timers/addTimer")
+      this.$store.commit("timers/ADD_TIMER")
     },
   },
 }

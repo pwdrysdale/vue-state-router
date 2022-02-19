@@ -9,7 +9,7 @@
     <label
       :key="todo.id"
       :for="todo.id"
-      class="w-12 py-2 text-center text-white transition-all duration-200 ease-in-out rounded-md"
+      class="w-12 py-2 text-center text-white transition-all duration-200 ease-in-out rounded-md cursor-pointer"
       :class="
         todo.completed
           ? 'bg-green-800 hover:bg-green-500'

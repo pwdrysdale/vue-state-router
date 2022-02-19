@@ -11,7 +11,7 @@ export const state = () => ({
 // ================================================================
 
 export const mutations = {
-  addTimer(state) {
+  ADD_TIMER(state) {
     state.timers.push({
       id: uuid(),
       timerName: "New Timer",
@@ -20,10 +20,10 @@ export const mutations = {
       dateCreated: new Date(),
     })
   },
-  removeTimer(state, id) {
+  REMOVE_TIMER(state, id) {
     state.timers = state.timers.filter((t) => t.id !== id)
   },
-  incrementTime(state, id) {
+  INCREMENT_TIME(state, id) {
     state.timers = state.timers.map((t) => {
       if (t.id === id) {
         return {
@@ -35,13 +35,13 @@ export const mutations = {
       }
     })
   },
-  startTimer(state, id) {
+  START_TIMER(state, id) {
     state.timers = state.timers.map((t) => {
       if (t.id === id) {
         return {
           ...t,
           interval: setInterval(() => {
-            this.commit("timers/incrementTime", id)
+            this.commit("timers/INCREMENT_TIME", id)
           }, 1000),
         }
       } else {
@@ -49,7 +49,7 @@ export const mutations = {
       }
     })
   },
-  stopTimer(state, id) {
+  STOP_TIMER(state, id) {
     state.timers = state.timers.map((t) => {
       if (t.id === id) {
         clearInterval(t.interval)
@@ -62,7 +62,7 @@ export const mutations = {
       }
     })
   },
-  resetTimer(state, id) {
+  RESET_TIMER(state, id) {
     state.timers = state.timers.map((t) => {
       if (t.id === id) {
         clearInterval(t.interval)
@@ -76,7 +76,7 @@ export const mutations = {
       }
     })
   },
-  setTimerName(state, { id, name }) {
+  SET_TIMER_NAME(state, { id, name }) {
     state.timers = state.timers.map((t) => {
       if (t.id === id) {
         return {

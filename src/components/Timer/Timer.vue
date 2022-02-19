@@ -52,19 +52,19 @@ export default {
   },
   methods: {
     removeTimer() {
-      this.$store.commit("timers/removeTimer", this.id)
+      this.$store.commit("timers/REMOVE_TIMER", this.id)
     },
     startTimer() {
-      this.$store.commit("timers/startTimer", this.id)
+      this.$store.commit("timers/START_TIMER", this.id)
     },
     stopTimer() {
-      this.$store.commit("timers/stopTimer", this.id)
+      this.$store.commit("timers/STOP_TIMER", this.id)
     },
     restartTimer() {
-      this.$store.commit("timers/resetTimer", this.id)
+      this.$store.commit("timers/RESET_TIMER", this.id)
     },
     setTimerName(payload) {
-      this.$store.commit("timers/setTimerName", payload)
+      this.$store.commit("timers/SET_TIMER_NAME", payload)
     },
 
     displayTime() {
