@@ -24,26 +24,6 @@ import * as toasts from "./modules/toasts"
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  state: {
-    // toasts: [],
-    // todos: [],
-    // timers: [],
-    // prayers: [],
-    // reading: [],
-  },
-  mutations: {
-    // ...toastMutations,
-    // ...prayerMutations,
-    // ...readingMutations,
-    // ...todoMutations,
-    // ...timerMutations,
-  },
-  actions: {
-    // ...toastActions,
-    // ...prayerActions,
-    // ...readingActions,
-    // ...todoActions,
-  },
   modules: {
     weatherPrefs,
     appName,

@@ -1,7 +1,9 @@
 <template>
   <div class="container flex flex-col items-center mx-auto">
     <h3 class="text-center">
-      Current Weather<span v-if="this.returnedLocation.name">
+      Current Weather<span
+        v-if="this.returnedLocation && this.returnedLocation.name"
+      >
         for {{ this.returnedLocation.name }}</span
       >
     </h3>
@@ -14,7 +16,10 @@
     </div>
     <button @click="getCurrent" class="mx-auto">Get Weather</button>
     <div class="flex flex-col gap-2 py-2">
-      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+      <div
+        v-if="this.returnedLocation && this.returnedLocation.name"
+        class="flex flex-col items-center"
+      >
         <h3>Location</h3>
         <p>
           {{ this.returnedLocation.name }}, {{ this.returnedLocation.region }},
@@ -28,7 +33,10 @@
         </p>
         <p>Timezome: {{ this.returnedLocation.tz_id }}</p>
       </div>
-      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+      <div
+        v-if="this.returnedLocation && this.returnedLocation.name"
+        class="flex flex-col items-center"
+      >
         <h3>Current Weather</h3>
         <p>
           Current Temperature:
@@ -89,17 +97,23 @@
           }}
         </p>
       </div>
-      <div v-if="this.returnedLocation.name" class="flex flex-col items-center">
+      <div
+        v-if="
+          this.returnedLocation &&
+          this.returnedLocation.tz_id &&
+          this.forecast.forecastday
+        "
+        class="flex flex-col items-center"
+      >
         <h3>Forecast</h3>
-        <div v-for="(fcDay, idx) of this.forecast.forecastday" :key="idx">
-          {{
-            idx === 0
-              ? "Today"
-              : idx === 1
-              ? "Tomorrow"
-              : day(fcDay.date_epoch, this.current.tz_id)
-          }}
-        </div>
+        <ForecastDay
+          v-for="(fcDay, idx) of this.forecast.forecastday"
+          :key="idx + returnedLocation.name"
+          :fcDay="fcDay"
+          :index="idx"
+          :units="weatherPrefs.units || 'Metric'"
+          :tz_id="returnedLocation.tz_id"
+        />
       </div>
     </div>
   </div>
@@ -107,18 +121,23 @@
 
 <script>
 import axios from "axios"
-import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
 
-dayjs.extend(utc)
+import ForecastDay from "./ForecastDay.vue"
 
 import { mapState } from "vuex"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export default {
   name: "WeatherScreen",
+  components: { ForecastDay },
   data: function () {
     return {
-      apiKey: "",
+      // apiKey: "",
       returnedLocation: {},
     }
   },
@@ -148,9 +167,6 @@ export default {
     toggleUnits() {
       this.$store.dispatch("weatherPrefs/toggleUnits")
     },
-    day(dateEpoch, timezone) {
-      return dayjs.utc(dateEpoch, timezone).format("dddd")
-    },
 
     async getCurrent() {
       try {
@@ -168,14 +184,13 @@ export default {
             "&days=9"
         )
         console.log(data)
-        const m = dayjs
-          .utc(data.location.localtime, data.location.tz_id)
-          .format("MMMM Do YYYY, h:mm a")
+        const m = dayjs().tz(data.location.tz_id).format("MMMM DD YYYY, h:mm a")
 
         this.returnedLocation = {
           ...data.location,
           localtime: m,
         }
+
         this.weather = data.current
 
         this.forecast = data.forecast
@@ -183,7 +198,6 @@ export default {
         console.log(e)
       }
     },
-    // async method to get current weather
   },
   created() {
     this.$store.dispatch("weatherPrefs/loadWeatherPrefs")

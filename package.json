@@ -16,6 +16,7 @@
     "autoprefixer": "^9.8.8",
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
+    "d3": "^7.3.0",
     "dayjs": "^1.10.7",
     "postcss": "^7.0.39",
     "tailwind": "npm:@tailwindcss/postcss7-compat@^2.2.17",

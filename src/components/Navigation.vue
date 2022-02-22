@@ -15,14 +15,14 @@
     <router-link :to="{ name: 'TimerScreen' }">
       <button>Timer</button>
     </router-link>
-    <router-link :to="{ name: 'Weather' }">
+    <!-- <router-link :to="{ name: 'Weather' }">
       <button>Weather</button>
-    </router-link>
+    </router-link> -->
   </div>
 </template>
 
 <script>
 export default {
   name: "Navigation",
-};
+}
 </script>
