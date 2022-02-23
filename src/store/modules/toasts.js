@@ -12,7 +12,6 @@ export const state = () => ({
 
 export const actions = {
   addToasts({ commit }, { text, type }) {
-    console.log("In the toast action")
     const toast = {
       id: uuid(),
       text,

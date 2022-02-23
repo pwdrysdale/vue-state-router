@@ -6,7 +6,6 @@
         v-for="(passage, index) in day.readings"
         :key="index"
         @click="goToLink(passage[0], passage[1])"
-        class="bg-pink-900"
       >
         {{ passage[0] + " " + passage[1] }}
       </button>
@@ -22,16 +21,10 @@
         <button @click="addReflection">
           <font-awesome-icon icon="plus" />
         </button>
-        <button v-if="!day.completedDate" @click="setCompletedDate">
-          <font-awesome-icon icon="check" />
-        </button>
-        <button
-          v-if="day.completedDate"
-          @click="removeCompletedDate"
-          class="bg-green-800 hover:bg-green-500"
-        >
-          <font-awesome-icon icon="check" />
-        </button>
+        <ToggleButton
+          :checked="day.completedDate ? true : false"
+          :toggleFn="toggleCompleted"
+        />
       </div>
       <span v-if="day.completedDate" class="small-text">
         completed {{ this.formattedCompletedDate }}
@@ -41,13 +34,18 @@
 </template>
 
 <script>
-import moment from "moment"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
 import ReflectionItem from "./ReflectionItem.vue"
+import ToggleButton from "../ToggleButton.vue"
+
+dayjs.extend(relativeTime)
 
 export default {
   name: "ReadingItem",
   components: {
     ReflectionItem,
+    ToggleButton,
   },
   props: {
     day: {
@@ -61,7 +59,7 @@ export default {
   computed: {
     formattedCompletedDate() {
       if (this.day.completedDate) {
-        return moment(this.day.completedDate).fromNow()
+        return dayjs(this.day.completedDate).fromNow()
       }
       return ""
     },
@@ -72,6 +70,13 @@ export default {
     },
     addReflection() {
       this.$store.dispatch("readings/addReflection", this.day.id)
+    },
+    toggleCompleted() {
+      if (this.day.completedDate) {
+        this.removeCompletedDate()
+      } else {
+        this.setCompletedDate()
+      }
     },
     setCompletedDate() {
       this.$store.dispatch("readings/setCompletedDate", this.day.id)

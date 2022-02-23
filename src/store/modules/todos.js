@@ -12,7 +12,6 @@ export const actions = {
   },
 
   addTodo(context, newTodo) {
-    console.log(newTodo)
     context.dispatch(
       "toasts/addToasts",
       {

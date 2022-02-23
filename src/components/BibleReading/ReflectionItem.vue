@@ -24,7 +24,10 @@
 </template>
 
 <script>
-import moment from "moment"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+dayjs.extend(relativeTime)
 
 export default {
   name: "ReflectionItem",
@@ -39,7 +42,7 @@ export default {
   computed: {
     modifiedDate: {
       get() {
-        return moment(this.dateModified).startOf("minute").fromNow()
+        return dayjs(this.dateModified).startOf("minute").fromNow()
       },
     },
 
@@ -48,7 +51,6 @@ export default {
         return this.title
       },
       set(title) {
-        console.log("Called set title")
         this.$store.dispatch("readings/setReflectionTitle", {
           reflectionId: this.id,
           id: this.parentId,

@@ -16,11 +16,9 @@ export const actions = {
 
   // get readings from local storage
   getReadingsFromLocal(context) {
-    console.log("getting readings from local storage")
     const readings = localStorage.getItem("readings")
 
     if (readings && readings.length > 0) {
-      console.log("Found readings in local storage")
       const correctDates = JSON.parse(readings).map((r) => {
         return {
           ...r,
@@ -53,13 +51,11 @@ export const actions = {
           ],
         }
       })
-      // console.log(newPlan);
       context.commit("loadReadings", newPlan)
     }
   },
 
   addReflection(context, id) {
-    console.log("adding reflection")
     const reflection = {
       id: uuid(),
       title: "",
@@ -72,16 +68,19 @@ export const actions = {
   },
 
   removeReflection(context, { id, reflectionId }) {
-    context.dispatch("addToasts", {
-      text: "Reflection removed",
-      type: "warning",
-    })
+    context.dispatch(
+      "toasts/addToasts",
+      {
+        text: "Reflection removed",
+        type: "warning",
+      },
+      { root: true }
+    )
     context.commit("removeReflection", { id, reflectionId })
     context.dispatch("setReadingsInLocal")
   },
 
   setReflectionTitle(context, { id, reflectionId, title }) {
-    console.log("setting reflection title")
     context.commit("setReflectionTitle", { id, reflectionId, title })
     context.dispatch("setReadingsInLocal")
   },
@@ -103,10 +102,14 @@ export const actions = {
 
     const text = textOptions[Math.floor(Math.random() * textOptions.length)]
 
-    context.dispatch("addToasts", {
-      text,
-      type: "success",
-    })
+    context.dispatch(
+      "toasts/addToasts",
+      {
+        text,
+        type: "success",
+      },
+      { root: true }
+    )
     context.commit("markReadingAsCompleted", id)
     context.dispatch("setReadingsInLocal")
   },
@@ -118,34 +121,50 @@ export const actions = {
     ).length
 
     if (completedReadings === 365) {
-      context.dispatch("addToasts", {
-        text: "You've done great! Let's to it again!",
-        type: "success",
-      })
+      context.dispatch(
+        "toasts/addToasts",
+        {
+          text: "You've done great! Let's to it again!",
+          type: "success",
+        },
+        { root: true }
+      )
     } else {
-      context.dispatch("addToasts", {
-        text: "Let's go!",
-        type: "success",
-      })
+      context.dispatch(
+        "toasts/addToasts",
+        {
+          text: "Let's go!",
+          type: "success",
+        },
+        { root: true }
+      )
     }
     context.commit("resetCompleted")
     context.dispatch("setReadingsInLocal")
   },
 
   resetReflections(context) {
-    context.dispatch("addToasts", {
-      text: "Fresh start!",
-      type: "success",
-    })
+    context.dispatch(
+      "toasts/addToasts",
+      {
+        text: "Fresh start!",
+        type: "success",
+      },
+      { root: true }
+    )
     context.commit("resetReflections")
     context.dispatch("setReadingsInLocal")
   },
 
   removeCompletedDate(context, id) {
-    context.dispatch("addToasts", {
-      text: "Back to incomplete it is!",
-      type: "warning",
-    })
+    context.dispatch(
+      "toasts/addToasts",
+      {
+        text: "Back to incomplete it is!",
+        type: "warning",
+      },
+      { root: true }
+    )
     context.commit("removeCompletedDate", id)
     context.dispatch("setReadingsInLocal")
   },

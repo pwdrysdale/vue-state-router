@@ -52,7 +52,10 @@
 </template>
 
 <script>
-import moment from "moment"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+dayjs.extend(relativeTime)
 
 export default {
   name: "PrayerItem",
@@ -78,14 +81,13 @@ export default {
         return this.prayerText || ""
       },
       set(text) {
-        console.log("Prayer set text")
         this.$store.dispatch("prayers/setPrayerText", { id: this.id, text })
       },
     },
     lastPrayedDate: {
       get() {
         return this.prayedDates.length > 0
-          ? moment(this.prayedDates[this.prayedDates.length - 1])
+          ? dayjs(this.prayedDates[this.prayedDates.length - 1])
               .startOf("minute")
               .fromNow()
           : null

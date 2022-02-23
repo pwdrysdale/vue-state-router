@@ -1,35 +1,6 @@
 <template>
-  <div class="item">
-    <input
-      type="checkbox"
-      v-model="completedModel"
-      :id="todo.id"
-      class="hide"
-    />
-    <label
-      :key="todo.id"
-      :for="todo.id"
-      class="w-12 py-2 text-center text-white transition-all duration-200 ease-in-out rounded-md cursor-pointer"
-      :class="
-        todo.completed
-          ? 'bg-green-800 hover:bg-green-500'
-          : 'bg-red-800  hover:bg-red-500'
-      "
-    >
-      <font-awesome-icon v-if="todo.completed" icon="check" />
-      <font-awesome-icon v-if="!todo.completed" icon="times" />
-
-      <!-- <font-awesome-icon
-        icon="check"
-        v-if="todo.completed"
-        class="checkicon green"
-      />
-      <font-awesome-icon
-        icon="times"
-        v-if="!todo.completed"
-        class="checkicon red"
-      /> -->
-    </label>
+  <div class="gap-1 item">
+    <ToggleButton :checked="todo.completed" :toggleFn="toggleCompleted" />
     <textarea-autosize autosize rows="1" v-model="textModel" />
     <input
       type="date"
@@ -64,9 +35,14 @@
 </template>
 
 <script>
+import ToggleButton from "../ToggleButton.vue"
+
 export default {
   name: "ToDoListItem",
   props: ["todo"],
+  components: {
+    ToggleButton,
+  },
   computed: {
     textModel: {
       get() {
@@ -80,20 +56,15 @@ export default {
         this.setInLocal()
       },
     },
-    completedModel: {
-      get() {
-        return this.todo.completed
-      },
-      set(value) {
-        this.$store.dispatch("todos/setTodo", {
-          ...this.todo,
-          completed: value,
-        })
-        this.setInLocal()
-      },
-    },
   },
   methods: {
+    toggleCompleted() {
+      this.$store.dispatch("todos/setTodo", {
+        ...this.todo,
+        completed: !this.todo.completed,
+      })
+      this.setInLocal()
+    },
     removeTodo(todo) {
       this.$store.dispatch("todos/removeTodo", todo)
     },

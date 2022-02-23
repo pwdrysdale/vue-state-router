@@ -183,7 +183,6 @@ export default {
             this.weatherPrefs.location +
             "&days=9"
         )
-        console.log(data)
         const m = dayjs().tz(data.location.tz_id).format("MMMM DD YYYY, h:mm a")
 
         this.returnedLocation = {
