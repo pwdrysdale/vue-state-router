@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container flex flex-col items-end justify-between gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
+    class="container flex flex-col items-end justify-between gap-4 py-1 mx-auto my-1 border-b-2 border-gray-800 space-between"
   >
     <div class="flex flex-col self-start flex-1 w-full">
       <input
@@ -43,12 +43,17 @@
         >
           <font-awesome-icon icon="check" />
         </button>
-        <router-link :to="{ name: 'Prayer', params: { id } }">
-          <button>View prayer</button>
-        </router-link>
         <button @click="removePrayer">
           <font-awesome-icon icon="trash" />
         </button>
+      </div>
+      <div class="button-group">
+        <router-link :to="{ name: 'Prayer', params: { id: previousId } }">
+          <button>Previous</button>
+        </router-link>
+        <router-link :to="{ name: 'Prayer', params: { id: nextId } }">
+          <button>Next</button>
+        </router-link>
       </div>
     </div>
   </div>
@@ -61,20 +66,24 @@ import relativeTime from "dayjs/plugin/relativeTime"
 dayjs.extend(relativeTime)
 
 export default {
-  name: "PrayerItem",
-  props: {
-    id: String,
-    prayerName: String,
-    prayerText: String,
-    createdDate: Date,
-    prayedDates: Array[Date],
-    answered: Boolean,
+  name: "PrayerSinglePage",
+  data() {
+    return {
+      id: null,
+      prayerName: null,
+      prayerText: null,
+      createdDate: null,
+      prayedDates: null,
+      answered: null,
+      nextId: null,
+      previousId: null,
+    }
   },
 
   computed: {
     nameModel: {
       get() {
-        return this.prayerName || ""
+        return this.prayerName
       },
       set(name) {
         this.$store.dispatch("prayers/setPrayerName", { id: this.id, name })
@@ -82,7 +91,7 @@ export default {
     },
     textModel: {
       get() {
-        return this.prayerText || ""
+        return this.prayerText
       },
       set(text) {
         this.$store.dispatch("prayers/setPrayerText", { id: this.id, text })
@@ -108,6 +117,33 @@ export default {
     setAsAnswered() {
       this.$store.dispatch("prayers/setPrayerAnswered", this.id)
     },
+  },
+
+  async created() {
+    const id = this.$route.params.id
+    const statePrayers = this.$store.state.prayers
+    if (statePrayers.prayers && statePrayers.prayers.length === 0) {
+      await this.$store.dispatch("prayers/getPrayersFromLocal")
+    }
+    const { prayers: allPrayers } = statePrayers
+    const prayer = allPrayers.find((prayer) => prayer.id === id)
+
+    this.id = prayer.id
+    this.prayerName = prayer.prayerName
+    this.prayerText = prayer.prayerText
+    this.createdDate = prayer.createdDate
+    this.prayedDates = prayer.prayedDates
+    this.answered = prayer.answered
+
+    const nextIdx = allPrayers.findIndex((prayer) => prayer.id === id) + 1
+    this.nextId =
+      nextIdx < allPrayers.length ? allPrayers[nextIdx].id : allPrayers[0].id
+
+    const previousIdx = allPrayers.findIndex((prayer) => prayer.id === id) - 1
+    this.previousId =
+      previousIdx >= 0
+        ? allPrayers[previousIdx].id
+        : allPrayers[allPrayers.length - 1].id
   },
 }
 </script>

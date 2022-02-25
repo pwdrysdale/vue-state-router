@@ -7,9 +7,6 @@
       :value="todo.dueDate.toISOString().split('T')[0]"
       @input="setDate($event.target.value, todo)"
     />
-    <button @click="removeTodo(todo)" class="mx-2">
-      <font-awesome-icon icon="trash" />
-    </button>
     <select
       v-model.number="todo.priority"
       class="opacity-80"
@@ -31,6 +28,9 @@
       <option value="4">4</option>
       <option value="5">5</option>
     </select>
+    <button @click="removeTodo(todo)" class="mx-2">
+      <font-awesome-icon icon="trash" />
+    </button>
   </div>
 </template>
 

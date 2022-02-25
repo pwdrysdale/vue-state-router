@@ -6,14 +6,14 @@
       <input v-model="name" class="text-4xl font-bold text-center" />
       <Navigation />
     </div>
-    <router-view />
+    <router-view :key="$route.path" />
     <Toasts />
   </div>
 </template>
 
 <script>
-import Navigation from "./components/Navigation.vue";
-import Toasts from "./components/Toasts/Toasts.vue";
+import Navigation from "./components/Navigation.vue"
+import Toasts from "./components/Toasts/Toasts.vue"
 
 export default {
   name: "App",
@@ -21,17 +21,17 @@ export default {
   computed: {
     name: {
       get() {
-        return this.$store.state.appName.name;
+        return this.$store.state.appName.name
       },
       set(name) {
-        this.$store.dispatch("appName/setName", name);
+        this.$store.dispatch("appName/setName", name)
       },
     },
   },
   created() {
-    this.$store.dispatch("appName/loadName");
+    this.$store.dispatch("appName/loadName")
   },
-};
+}
 </script>
 
 <style>

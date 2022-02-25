@@ -2,4 +2,4 @@
 
 // module.exports = {
 //   publicPath: "/vue-state-router/",
-// };
+// }

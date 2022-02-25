@@ -1,7 +1,7 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from "vue"
+import VueRouter from "vue-router"
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -9,6 +9,12 @@ const routes = [
     name: "Prayers",
     component: () => import("../components/Prayers/PrayerScreen.vue"),
   },
+  {
+    path: "/prayers/:id",
+    name: "Prayer",
+    component: () => import("../components/Prayers/PrayerSinglePage.vue"),
+  },
+
   {
     path: "/reading",
     name: "BibleReading",
@@ -34,11 +40,11 @@ const routes = [
     name: "Weather",
     component: () => import("../components/Weather/WeatherScreen.vue"),
   },
-];
+]
 
 const router = new VueRouter({
   routes,
   linkActiveClass: "is-active",
-});
+})
 
-export default router;
+export default router
