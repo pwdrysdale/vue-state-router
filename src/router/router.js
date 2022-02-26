@@ -21,6 +21,11 @@ const routes = [
     component: () => import("../components/BibleReading/Progress.vue"),
   },
   {
+    path: "/reading/:day",
+    name: "Reading",
+    component: () => import("../components/BibleReading/SingleRead.vue"),
+  },
+  {
     path: "/counter",
     name: "Counter",
     component: () => import("../components/Counter/HelloWorld.vue"),
