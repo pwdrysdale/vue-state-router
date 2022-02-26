@@ -1,5 +1,8 @@
 <template>
-  <div class="py-2 my-2 border-b-2 border-gray-800" v-if="this.day > 0">
+  <div
+    class="container py-2 mx-auto my-2 border-b-2 border-gray-800"
+    v-if="this.day > 0"
+  >
     <h3>Day {{ day }}</h3>
     <div class="button-group">
       <button
@@ -29,6 +32,19 @@
       <span v-if="completedDate" class="small-text">
         completed {{ this.formattedCompletedDate }}
       </span>
+    </div>
+    <div class="button-group">
+      <router-link
+        :to="{
+          name: 'Reading',
+          params: { day: ((((day - 2) % 365) + 365) % 365) + 1 },
+        }"
+      >
+        <button>Previous</button>
+      </router-link>
+      <router-link :to="{ name: 'Reading', params: { day: (day % 365) + 1 } }">
+        <button>Next</button>
+      </router-link>
     </div>
   </div>
 </template>

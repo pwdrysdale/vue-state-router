@@ -15,22 +15,28 @@
         <font-awesome-icon icon="plus" />
       </button>
     </div>
-    <div class="button-group"></div>
-    <PrayerItem
-      v-for="prayer in prayers"
-      v-bind:key="prayer.id"
-      v-bind="{ ...prayer }"
-    />
+    <div class="flex w-full gap-2">
+      <div class="flex flex-col w-full">
+        <PrayerItem
+          v-for="prayer in prayers"
+          v-bind:key="prayer.id"
+          v-bind="{ ...prayer }"
+        />
+      </div>
+      <CategoryManagement />
+    </div>
   </div>
 </template>
 
 <script>
 import PrayerItem from "./PrayerItem.vue"
+import CategoryManagement from "./CategoryManagement.vue"
 
 export default {
   name: "PrayerScreen",
   components: {
     PrayerItem,
+    CategoryManagement,
   },
   data() {
     return {

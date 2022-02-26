@@ -4,6 +4,7 @@ export const namespaced = true
 
 export const state = {
   prayers: [],
+  categories: [],
 }
 
 export const mutations = {
@@ -15,8 +16,16 @@ export const mutations = {
     state.prayers = [...state.prayers, prayer]
   },
 
+  ADD_CATEGORY(state, category) {
+    state.categories = [...state.categories, category]
+  },
+
   REMOVE_PRAYER(state, id) {
     state.prayers = state.prayers.filter((p) => p.id !== id)
+  },
+
+  REMOVE_CATEGORY(state, id) {
+    state.categories = state.categories.filter((c) => c.id !== id)
   },
 
   SET_PRAYER_NAME(state, { id, name }) {
@@ -28,6 +37,19 @@ export const mutations = {
         }
       } else {
         return p
+      }
+    })
+  },
+
+  SET_CATEGORY_NAME(state, { id, name }) {
+    state.categories = state.categories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          categoryName: name,
+        }
+      } else {
+        return c
       }
     })
   },
@@ -58,6 +80,19 @@ export const mutations = {
     })
   },
 
+  SET_PRAYER_CATEGORY(state, { id, categoryId }) {
+    state.prayers = state.prayers.map((p) => {
+      if (p.id === id) {
+        return {
+          ...p,
+          categoryId: categoryId,
+        }
+      } else {
+        return p
+      }
+    })
+  },
+
   MARK_AS_ANSWERED(state, id) {
     state.prayers = state.prayers.map((p) => {
       if (p.id === id) {
@@ -67,6 +102,32 @@ export const mutations = {
         }
       } else {
         return p
+      }
+    })
+  },
+
+  SET_CATEGORY_ORDER(state, { id, order }) {
+    state.categories = state.categories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          sortOrder: order,
+        }
+      } else {
+        return c
+      }
+    })
+  },
+
+  SET_CATEGORY_COLOR(state, { id, color }) {
+    state.categories = state.categories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          color: color,
+        }
+      } else {
+        return c
       }
     })
   },
@@ -97,6 +158,7 @@ export const actions = {
           createdDate: new Date(),
           prayedDates: [],
           answered: false,
+          categoryId: "",
         },
       ]
       commit("LOAD_PRAYERS", prayers)
@@ -178,6 +240,40 @@ export const actions = {
       )
     }
     commit("MARK_AS_ANSWERED", id)
+    dispatch("setPrayersInLocal")
+  },
+
+  setPrayerCategory({ dispatch, commit }, payload) {
+    commit("SET_PRAYER_CATEGORY", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  addCategory({ dispatch, commit }) {
+    const category = {
+      id: uuid(),
+      categoryName: "",
+      sortOrder: 0,
+      colour: "",
+    }
+    commit("ADD_CATEGORY", category)
+    dispatch("setPrayersInLocal")
+  },
+
+  removeCategory({ dispatch, commit }, id) {
+    dispatch(
+      "toasts/addToasts",
+      {
+        text: ["Gone!", "Done!"][Math.floor(Math.random() * 2)],
+        type: "success",
+      },
+      { root: true }
+    )
+    commit("REMOVE_CATEGORY", id)
+    dispatch("setPrayersInLocal")
+  },
+
+  setCategoryName({ dispatch, commit }, payload) {
+    commit("SET_CATEGORY_NAME", payload)
     dispatch("setPrayersInLocal")
   },
 }
