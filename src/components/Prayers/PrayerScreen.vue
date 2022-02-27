@@ -31,6 +31,7 @@
 <script>
 import PrayerItem from "./PrayerItem.vue"
 import CategoryManagement from "./CategoryManagement.vue"
+import { mapState } from "vuex"
 
 export default {
   name: "PrayerScreen",
@@ -46,16 +47,18 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      statePrayers: (state) => state.prayers.prayers,
+      categories: (state) => state.prayers.categories,
+    }),
     prayers() {
-      return this.$store.state.prayers.prayers
-        ? [...this.$store.state.prayers.prayers]
-            .filter((a) => {
-              return !this.hideAnswered || !a.answered
-            })
-            .sort((a, b) =>
-              this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
-            )
-        : []
+      return this.statePrayers
+        .filter((a) => {
+          return !this.hideAnswered || !a.answered
+        })
+        .sort((a, b) =>
+          this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
+        )
     },
   },
 

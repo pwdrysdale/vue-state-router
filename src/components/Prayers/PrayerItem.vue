@@ -33,10 +33,24 @@
         {{ lastPrayedDate && "Last time " + lastPrayedDate }}
       </div>
       <div class="button-group">
+        <select
+          v-model="categoryModel"
+          :style="{
+            background: categoryModel ? categoryModel.colour : 'inherit',
+          }"
+        >
+          <option value="">Select a category</option>
+          <option
+            v-for="category in categories"
+            :value="category"
+            :key="category.id"
+          >
+            {{ category.categoryName }}
+          </option>
+        </select>
         <button @click="prayed">
           <font-awesome-icon icon="pray" />
         </button>
-
         <button
           @click="setAsAnswered"
           :class="answered && 'bg-green-800 hover:bg-green-500'"
@@ -57,6 +71,7 @@
 <script>
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import { mapState } from "vuex"
 
 dayjs.extend(relativeTime)
 
@@ -69,9 +84,13 @@ export default {
     createdDate: Date,
     prayedDates: Array[Date],
     answered: Boolean,
+    categoryId: String,
   },
 
   computed: {
+    ...mapState({
+      categories: (state) => state.prayers.categories,
+    }),
     nameModel: {
       get() {
         return this.prayerName || ""
@@ -86,6 +105,20 @@ export default {
       },
       set(text) {
         this.$store.dispatch("prayers/setPrayerText", { id: this.id, text })
+      },
+    },
+    categoryModel: {
+      get() {
+        return this.categories.find(
+          (category) => category.id === this.categoryId
+        )
+      },
+      set(category) {
+        console.log(category)
+        this.$store.dispatch("prayers/setPrayerCategory", {
+          id: this.id,
+          categoryId: category.id,
+        })
       },
     },
     lastPrayedDate: {

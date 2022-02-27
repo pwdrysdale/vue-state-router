@@ -8,8 +8,9 @@ export const state = {
 }
 
 export const mutations = {
-  LOAD_PRAYERS(state, prayers) {
-    state.prayers = prayers || []
+  LOAD_PRAYERS(state, payload) {
+    state.prayers = payload.prayers || []
+    state.categories = payload.categories || []
   },
 
   ADD_PRAYER(state, prayer) {
@@ -119,12 +120,25 @@ export const mutations = {
     })
   },
 
-  SET_CATEGORY_COLOR(state, { id, color }) {
+  SET_CATEGORY_COLOUR(state, { id, colour }) {
     state.categories = state.categories.map((c) => {
       if (c.id === id) {
         return {
           ...c,
-          color: color,
+          colour,
+        }
+      } else {
+        return c
+      }
+    })
+  },
+  TOGGLE_CATEGORY_VISIBILITY(state, { id }) {
+    console.log("Mutation", id)
+    state.categories = state.categories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          visible: !c.visible,
         }
       } else {
         return c
@@ -135,20 +149,24 @@ export const mutations = {
 
 export const actions = {
   setPrayersInLocal(context) {
-    localStorage.setItem("vueprayers", JSON.stringify(context.state.prayers))
+    localStorage.setItem("vueprayers", JSON.stringify(context.state))
   },
 
   getPrayersFromLocal({ commit }) {
-    const prayers = localStorage.getItem("vueprayers")
-    if (prayers) {
-      const correctDates = JSON.parse(prayers).map((p) => {
+    const loaded = localStorage.getItem("vueprayers")
+    if (loaded) {
+      const { prayers, categories } = JSON.parse(loaded)
+      const correctDates = prayers.map((p) => {
         return {
           ...p,
           prayedDates: p.prayedDates.map((pd) => new Date(pd)),
           createdDate: new Date(p.createdDate),
         }
       })
-      commit("LOAD_PRAYERS", correctDates)
+      commit("LOAD_PRAYERS", {
+        prayers: correctDates,
+        categories: categories || [],
+      })
     } else {
       const prayers = [
         {
@@ -161,7 +179,7 @@ export const actions = {
           categoryId: "",
         },
       ]
-      commit("LOAD_PRAYERS", prayers)
+      commit("LOAD_PRAYERS", { prayers, categories: [] })
     }
   },
 
@@ -172,6 +190,7 @@ export const actions = {
       prayerText: "",
       createdDate: new Date(),
       prayedDates: [],
+      categoryId: "",
     }
     commit("ADD_PRAYER", prayer)
     dispatch(
@@ -254,6 +273,7 @@ export const actions = {
       categoryName: "",
       sortOrder: 0,
       colour: "",
+      visible: true,
     }
     commit("ADD_CATEGORY", category)
     dispatch("setPrayersInLocal")
@@ -274,6 +294,22 @@ export const actions = {
 
   setCategoryName({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_NAME", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  setSortOrder({ dispatch, commit }, payload) {
+    commit("SET_CATEGORY_ORDER", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  setCategoryColour({ dispatch, commit }, payload) {
+    commit("SET_CATEGORY_COLOUR", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  toggleCategoryVisibility({ dispatch, commit }, payload) {
+    console.log("Action", payload)
+    commit("TOGGLE_CATEGORY_VISIBILITY", payload)
     dispatch("setPrayersInLocal")
   },
 }
