@@ -5,7 +5,7 @@
       <button
         v-for="(passage, index) in day.readings"
         :key="index"
-        @click="goToLink(day.passage[0], day.passage[1])"
+        @click="goToLink(passage[0], passage[1])"
       >
         {{ passage[0] + " " + passage[1] }}
       </button>

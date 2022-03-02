@@ -69,13 +69,13 @@ export default {
       this.$store.dispatch("prayers/addPrayer")
     },
     changeSortCategory() {
-      this.$store.dispatch("prayers/changeSortCategory")
+      this.$store.dispatch("prayers/setSortCategory")
     },
     changeSortOrder() {
-      this.$store.dispatch("prayers/changeSortOrder")
+      this.$store.dispatch("prayers/setPrayerSortOrder")
     },
     toggleHideAnswered() {
-      this.$store.dispatch("prayers/toggleHideAnswered")
+      this.$store.dispatch("prayers/toggleShowAnswered")
     },
     sortPrayers(a, b, sortOrder, sortCategory) {
       if (sortCategory === "Random") {
