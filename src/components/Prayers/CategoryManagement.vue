@@ -1,37 +1,50 @@
 <template>
-  <div>
-    <h3>This is the categories</h3>
+  <div class="flex flex-col items-start w-full gap-2">
     <div
       v-for="category in categories"
       v-bind:key="category.id"
-      class="border-b-2 border-gray-700"
+      class="flex flex-col items-start w-full p-2 rounded-md"
       :style="{ background: category.colour }"
     >
-      <label for="category-name">Name: </label>
-      <input
-        :value="category.categoryName"
-        @input="setCategoryName(category.id, $event.target.value)"
-        id="category-name"
-      />
-      <label for="category-color">Color: </label>
-      <input
-        :value="category.colour"
-        @input="setCategoryColour(category.id, $event.target.value)"
-        id="category-colour"
-      />
-      <label for="category-sort-order">Sort Order: </label>
-      <input
-        :value="category.sortOrder"
-        @input="setSortOrder(category.id, $event.target.value)"
-        id="category-sort-order"
-      />
-      <ToggleButton
-        :checked="category.visible"
-        :toggleFn="() => toggleCategoryVisibility(category.id)"
-      />
-      <button @click="deleteCategory(category.id)">
-        <font-awesome-icon icon="trash" />
-      </button>
+      <div class="category-group">
+        <label for="category-name">Name: </label>
+        <input
+          :value="category.categoryName"
+          @input="setCategoryName(category.id, $event.target.value)"
+          placeholder="Category name"
+          id="category-name"
+        />
+      </div>
+      <div class="category-group">
+        <label for="category-color">Color: </label>
+        <input
+          :value="category.colour"
+          @input="setCategoryColour(category.id, $event.target.value)"
+          placeholder="Category color"
+          id="category-colour"
+        />
+      </div>
+      <div class="category-group">
+        <label for="category-sort-order">Sort Order: </label>
+        <input
+          :value="category.sortOrder"
+          @input="setSortOrder(category.id, $event.target.value)"
+          placeholder="Sort order"
+          id="category-sort-order"
+        />
+      </div>
+      <div class="category-group">
+        <p>Visible:</p>
+        <ToggleButton
+          :checked="category.visible"
+          :toggleFn="() => toggleCategoryVisibility(category.id)"
+        />
+      </div>
+      <div class="category-group">
+        <button @click="deleteCategory(category.id)">
+          <font-awesome-icon icon="trash" />
+        </button>
+      </div>
     </div>
     <button @click="addCategory">
       <font-awesome-icon icon="plus" />
@@ -78,3 +91,13 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.category-group {
+  @apply w-full content-between flex flex-row  justify-between items-center;
+}
+
+.category-group input {
+  @apply text-right;
+}
+</style>

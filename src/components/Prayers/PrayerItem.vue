@@ -2,7 +2,7 @@
   <div
     class="container flex flex-col items-end justify-between gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
   >
-    <div class="flex flex-col self-start flex-1 w-full">
+    <div class="flex flex-col self-start w-full">
       <input
         v-model="nameModel"
         class="h-full font-bold"
@@ -58,7 +58,9 @@
           <font-awesome-icon icon="check" />
         </button>
         <router-link :to="{ name: 'Prayer', params: { id } }">
-          <button>View prayer</button>
+          <button>
+            <font-awesome-icon icon="eye" />
+          </button>
         </router-link>
         <button @click="removePrayer">
           <font-awesome-icon icon="trash" />

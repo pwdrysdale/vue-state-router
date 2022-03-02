@@ -5,6 +5,11 @@ export const namespaced = true
 export const state = {
   prayers: [],
   categories: [],
+  sortHideOptions: {
+    sortOrder: "Descending",
+    sortCategory: "Created Date",
+    hideAnswered: false,
+  },
 }
 
 export const mutations = {
@@ -132,6 +137,7 @@ export const mutations = {
       }
     })
   },
+
   TOGGLE_CATEGORY_VISIBILITY(state, { id }) {
     console.log("Mutation", id)
     state.categories = state.categories.map((c) => {
@@ -144,6 +150,33 @@ export const mutations = {
         return c
       }
     })
+  },
+
+  TOGGLE_SORT_ORDER(state) {
+    state.sortHideOptions.sortOrder =
+      state.sortHideOptions.sortOrder === "Descending"
+        ? "Ascending"
+        : "Descending"
+  },
+
+  TOGGLE_HIDE_ANSWERED(state) {
+    state.sortHideOptions.hideAnswered = !state.sortHideOptions.hideAnswered
+  },
+
+  SET_SORT_CATEGORY(state) {
+    const options = [
+      "Created Date",
+      "Last Prayed",
+      "Prayed Count",
+      "Title",
+      "Body",
+      "Answered",
+      "Category",
+      "Random",
+    ]
+    const index = options.indexOf(state.sortHideOptions.sortCategory)
+    const nextIndex = (index + 1) % options.length
+    state.sortHideOptions.sortCategory = options[nextIndex]
   },
 }
 

@@ -8,7 +8,7 @@
       />
       <textarea-autosize
         autosize
-        rows="5"
+        rows="1"
         placeholder="Reflections"
         class="w-full"
         v-model="textModel"

@@ -1,22 +1,19 @@
 <template>
-  <div
-    class="container py-2 mx-auto my-2 border-b-2 border-gray-800"
-    v-if="this.day > 0"
-  >
-    <h3>Day {{ day }}</h3>
+  <div class="container py-2 mx-auto my-2 border-b-2 border-gray-800">
+    <h3>Day {{ day.day }}</h3>
     <div class="button-group">
       <button
-        v-for="(passage, index) in readings"
+        v-for="(passage, index) in day.readings"
         :key="index"
-        @click="goToLink(passage[0], passage[1])"
+        @click="goToLink(day.passage[0], day.passage[1])"
       >
         {{ passage[0] + " " + passage[1] }}
       </button>
     </div>
     <ReflectionItem
-      v-for="ref of reflections"
+      v-for="ref of day.reflections"
       :key="ref.id"
-      v-bind="{ ...ref, parentId: id }"
+      v-bind="{ ...ref, parentId: day.id }"
     />
 
     <div class="flex flex-col items-center gap-2 mx-auto">
@@ -24,12 +21,9 @@
         <button @click="addReflection">
           <font-awesome-icon icon="plus" />
         </button>
-        <ToggleButton
-          :checked="completedDate ? true : false"
-          :toggleFn="toggleCompleted"
-        />
+        <ToggleButton :checked="checked" :toggleFn="toggleCompleted" />
       </div>
-      <span v-if="completedDate" class="small-text">
+      <span v-if="day.completedDate" class="small-text">
         completed {{ this.formattedCompletedDate }}
       </span>
     </div>
@@ -37,12 +31,14 @@
       <router-link
         :to="{
           name: 'Reading',
-          params: { day: ((((day - 2) % 365) + 365) % 365) + 1 },
+          params: { day: ((((day.day - 2) % 365) + 365) % 365) + 1 },
         }"
       >
         <button>Previous</button>
       </router-link>
-      <router-link :to="{ name: 'Reading', params: { day: (day % 365) + 1 } }">
+      <router-link
+        :to="{ name: 'Reading', params: { day: (day.day % 365) + 1 } }"
+      >
         <button>Next</button>
       </router-link>
     </div>
@@ -54,6 +50,7 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import ReflectionItem from "./ReflectionItem.vue"
 import ToggleButton from "../ToggleButton.vue"
+import { mapState } from "vuex"
 
 dayjs.extend(relativeTime)
 export default {
@@ -65,16 +62,21 @@ export default {
   data() {
     return {
       id: "",
-      day: "",
-      readings: "",
-      completedDate: "",
-      reflections: [],
     }
   },
   computed: {
+    ...mapState({
+      readings: (state) => state.readings.reading,
+    }),
+    day() {
+      return this.readings.find((day) => day.day === (this ? this.id : 365))
+    },
+    checked() {
+      return this.day.completedDate ? true : false
+    },
     formattedCompletedDate() {
-      if (this.completedDate) {
-        return dayjs(this.completedDate).fromNow()
+      if (this.day.completedDate) {
+        return dayjs(this.day.completedDate).fromNow()
       }
       return ""
     },
@@ -84,24 +86,24 @@ export default {
       window.location.href = "https://www.esv.org/" + book + "+" + verse
     },
     addReflection() {
-      this.$store.dispatch("readings/addReflection", this.id)
+      this.$store.dispatch("readings/addReflection", this.day.id)
     },
     toggleCompleted() {
-      if (this.completedDate) {
+      if (this.day.completedDate) {
         this.removeCompletedDate()
       } else {
         this.setCompletedDate()
       }
     },
     setCompletedDate() {
-      this.$store.dispatch("readings/setCompletedDate", this.id)
+      this.$store.dispatch("readings/setCompletedDate", this.day.id)
     },
     removeCompletedDate() {
-      this.$store.dispatch("readings/removeCompletedDate", this.id)
+      this.$store.dispatch("readings/removeCompletedDate", this.day.id)
     },
   },
   created() {
-    const day = parseInt(this.$route.params.day, 10)
+    this.id = parseInt(this.$route.params.day, 10)
 
     if (
       this.$store.state.readings &&
@@ -109,16 +111,6 @@ export default {
     ) {
       this.$store.dispatch("readings/getReadingsFromLocal")
     }
-
-    this.$store.state.readings.reading.forEach((reading) => {
-      if (reading.day === day) {
-        this.id = reading.id
-        this.day = reading.day
-        this.readings = reading.readings
-        this.completedDate = reading.completedDate
-        this.reflections = reading.reflections
-      }
-    })
   },
 }
 </script>

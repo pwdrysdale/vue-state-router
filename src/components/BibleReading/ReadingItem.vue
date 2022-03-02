@@ -19,7 +19,9 @@
     <div class="flex flex-col items-center gap-2 mx-auto">
       <div class="items-center button-group">
         <router-link :to="{ name: 'Reading', params: { day: day.day } }">
-          <button>Focus</button>
+          <button>
+            <font-awesome-icon icon="eye" />
+          </button>
         </router-link>
         <button @click="addReflection">
           <font-awesome-icon icon="plus" />

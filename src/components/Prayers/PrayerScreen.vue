@@ -15,8 +15,8 @@
         <font-awesome-icon icon="plus" />
       </button>
     </div>
-    <div class="flex w-full gap-2">
-      <div class="flex flex-col w-full">
+    <div class="grid w-full gap-4 lg:grid-cols-4">
+      <div class="flex flex-col w-full lg:col-span-3">
         <PrayerItem
           v-for="prayer in prayers"
           v-bind:key="prayer.id"
@@ -52,10 +52,15 @@ export default {
       categories: (state) => state.prayers.categories,
     }),
     prayers() {
+      const hiddenCategoryIds = this.categories
+        .filter((category) => !category.visible)
+        .map((category) => category.id)
+
       return this.statePrayers
         .filter((a) => {
           return !this.hideAnswered || !a.answered
         })
+        .filter((p) => !hiddenCategoryIds.includes(p.categoryId))
         .sort((a, b) =>
           this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
         )
@@ -74,6 +79,7 @@ export default {
         "Title",
         "Body",
         "Answered",
+        "Category",
         "Random",
       ]
       const index = options.indexOf(this.sortCategory)
@@ -124,6 +130,14 @@ export default {
           : b.prayerText > a.prayerText
           ? 1
           : -1
+      } else if (sortCategory === "Category") {
+        let aWeight = 0
+        let bWeight = 0
+        aWeight =
+          this.categories.find((c) => c.id === a.categoryId)?.sortOrder || 0
+        bWeight =
+          this.categories.find((c) => c.id === b.categoryId)?.sortOrder || 0
+        return sortOrder === "Ascending" ? aWeight - bWeight : bWeight - aWeight
       } else if (sortCategory === "Answered") {
         return sortOrder === "Ascending"
           ? a.answered === true
