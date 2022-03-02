@@ -16,6 +16,7 @@ export const mutations = {
   LOAD_PRAYERS(state, payload) {
     state.prayers = payload.prayers || []
     state.categories = payload.categories || []
+    state.showHideOptions = payload.showHideOptions || {}
   },
 
   ADD_PRAYER(state, prayer) {
@@ -188,7 +189,7 @@ export const actions = {
   getPrayersFromLocal({ commit }) {
     const loaded = localStorage.getItem("vueprayers")
     if (loaded) {
-      const { prayers, categories } = JSON.parse(loaded)
+      const { prayers, categories, showHideOptions } = JSON.parse(loaded)
       const correctDates = prayers.map((p) => {
         return {
           ...p,
@@ -199,6 +200,7 @@ export const actions = {
       commit("LOAD_PRAYERS", {
         prayers: correctDates,
         categories: categories || [],
+        showHideOptions: showHideOptions || {},
       })
     } else {
       const prayers = [
@@ -343,6 +345,21 @@ export const actions = {
   toggleCategoryVisibility({ dispatch, commit }, payload) {
     console.log("Action", payload)
     commit("TOGGLE_CATEGORY_VISIBILITY", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  setSortCategory({ dispatch, commit }, payload) {
+    commit("SET_SORT_CATEGORY", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  setPrayerSortOrder({ dispatch, commit }, payload) {
+    commit("SET_SORT_ORDER", payload)
+    dispatch("setPrayersInLocal")
+  },
+
+  toggleShowAnswered({ dispatch, commit }, payload) {
+    commit("TOGGLE_SHOW_ANSWERED", payload)
     dispatch("setPrayersInLocal")
   },
 }

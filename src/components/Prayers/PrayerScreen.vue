@@ -39,17 +39,14 @@ export default {
     PrayerItem,
     CategoryManagement,
   },
-  data() {
-    return {
-      sortOrder: "Descending",
-      sortCategory: "Created Date",
-      hideAnswered: false,
-    }
-  },
+
   computed: {
     ...mapState({
       statePrayers: (state) => state.prayers.prayers,
       categories: (state) => state.prayers.categories,
+      sortOrder: (state) => state.prayers.sortHideOptions.sortOrder,
+      sortCategory: (state) => state.prayers.sortHideOptions.sortCategory,
+      hideAnsered: (state) => state.prayers.sortHideOptions.hideAnsered,
     }),
     prayers() {
       const hiddenCategoryIds = this.categories
@@ -72,23 +69,13 @@ export default {
       this.$store.dispatch("prayers/addPrayer")
     },
     changeSortCategory() {
-      const options = [
-        "Created Date",
-        "Last Prayed",
-        "Prayed Count",
-        "Title",
-        "Body",
-        "Answered",
-        "Category",
-        "Random",
-      ]
-      const index = options.indexOf(this.sortCategory)
-      const nextIndex = (index + 1) % options.length
-      this.sortCategory = options[nextIndex]
+      this.$store.dispatch("prayers/changeSortCategory")
     },
     changeSortOrder() {
-      this.sortOrder =
-        this.sortOrder === "Ascending" ? "Descending" : "Ascending"
+      this.$store.dispatch("prayers/changeSortOrder")
+    },
+    toggleHideAnswered() {
+      this.$store.dispatch("prayers/toggleHideAnswered")
     },
     sortPrayers(a, b, sortOrder, sortCategory) {
       if (sortCategory === "Random") {
@@ -147,9 +134,6 @@ export default {
           ? 1
           : -1
       }
-    },
-    toggleHideAnswered() {
-      this.hideAnswered = !this.hideAnswered
     },
   },
   created: function () {
