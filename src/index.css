@@ -61,3 +61,11 @@ button {
 .is-active button {
   @apply bg-blue-500;
 }
+
+.category-group {
+  @apply flex flex-row items-center content-between justify-between w-full;
+}
+
+.category-group input {
+  @apply text-right;
+}

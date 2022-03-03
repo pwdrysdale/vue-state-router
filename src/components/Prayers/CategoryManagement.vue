@@ -91,13 +91,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.category-group {
-  @apply w-full content-between flex flex-row  justify-between items-center;
-}
-
-.category-group input {
-  @apply text-right;
-}
-</style>
