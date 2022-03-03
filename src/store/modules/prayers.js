@@ -10,13 +10,39 @@ export const state = {
     sortCategory: "Created Date",
     hideAnswered: false,
   },
+  sfPrayers: [],
 }
 
 export const mutations = {
   LOAD_PRAYERS(state, payload) {
     state.prayers = payload.prayers || []
     state.categories = payload.categories || []
-    state.showHideOptions = payload.showHideOptions || {}
+    state.showHideOptions = payload.showHideOptions || {
+      sortOrder: "descending",
+      sortCategory: "createdDate",
+      hideAnswered: false,
+    }
+  },
+
+  SET_SF_PRAYERS(state) {
+    state.sfPrayers = state.prayers
+      .sort((a, b) =>
+        sortPrayers(
+          a,
+          b,
+          state.sortHideOptions.sortOrder,
+          state.sortHideOptions.sortCategory
+        )
+      )
+      .filter(
+        (prayer) => !(prayer.answered && state.sortHideOptions.hideAnswered)
+      )
+      .filter((prayer) => {
+        const hiddenCategoryIds = state.categories
+          .filter((category) => !category.visible)
+          .map((category) => category.id)
+        return !hiddenCategoryIds.includes(prayer.categoryId)
+      })
   },
 
   ADD_PRAYER(state, prayer) {
@@ -184,6 +210,7 @@ export const mutations = {
 export const actions = {
   setPrayersInLocal(context) {
     localStorage.setItem("vueprayers", JSON.stringify(context.state))
+    context.commit("SET_SF_PRAYERS")
   },
 
   getPrayersFromLocal({ commit }) {
@@ -202,6 +229,7 @@ export const actions = {
         categories: categories || [],
         showHideOptions: showHideOptions || {},
       })
+      commit("SET_SF_PRAYERS")
     } else {
       const prayers = [
         {
@@ -215,6 +243,7 @@ export const actions = {
         },
       ]
       commit("LOAD_PRAYERS", { prayers, categories: [] })
+      commit("SET_SF_PRAYERS")
     }
   },
 
@@ -239,6 +268,7 @@ export const actions = {
       { root: true }
     )
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   removePrayer({ dispatch, commit }, id) {
@@ -252,16 +282,19 @@ export const actions = {
     )
     commit("REMOVE_PRAYER", id)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setPrayerName({ dispatch, commit }, payload) {
     commit("SET_PRAYER_NAME", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setPrayerText({ dispatch, commit }, payload) {
     commit("SET_PRAYER_TEXT", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   addPrayerDate({ dispatch, commit }, id) {
@@ -277,6 +310,7 @@ export const actions = {
       { root: true }
     )
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setPrayerAnswered({ dispatch, commit, state }, id) {
@@ -295,11 +329,13 @@ export const actions = {
     }
     commit("MARK_AS_ANSWERED", id)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setPrayerCategory({ dispatch, commit }, payload) {
     commit("SET_PRAYER_CATEGORY", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   addCategory({ dispatch, commit }) {
@@ -312,6 +348,7 @@ export const actions = {
     }
     commit("ADD_CATEGORY", category)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   removeCategory({ dispatch, commit }, id) {
@@ -325,41 +362,106 @@ export const actions = {
     )
     commit("REMOVE_CATEGORY", id)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setCategoryName({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_NAME", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setSortOrder({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_ORDER", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setCategoryColour({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_COLOUR", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   toggleCategoryVisibility({ dispatch, commit }, payload) {
     console.log("Action", payload)
     commit("TOGGLE_CATEGORY_VISIBILITY", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setSortCategory({ dispatch, commit }, payload) {
     commit("SET_SORT_CATEGORY", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   setPrayerSortOrder({ dispatch, commit }, payload) {
-    commit("SET_SORT_ORDER", payload)
+    commit("TOGGLE_SORT_ORDER", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
 
   toggleShowAnswered({ dispatch, commit }, payload) {
-    commit("TOGGLE_SHOW_ANSWERED", payload)
+    commit("TOGGLE_HIDE_ANSWERED", payload)
     dispatch("setPrayersInLocal")
+    commit("SET_SF_PRAYERS")
   },
+}
+
+const sortPrayers = (a, b, sortOrder, sortCategory) => {
+  if (sortCategory === "Random") {
+    return Math.random() - 0.5
+  }
+  if (sortCategory === "Created Date") {
+    return sortOrder === "Ascending"
+      ? a.createdDate - b.createdDate
+      : b.createdDate - a.createdDate
+  } else if (sortCategory === "Last Prayed") {
+    return sortOrder === "Ascending"
+      ? a.prayedDates.length === 0
+        ? -1
+        : a.prayedDates[a.prayedDates.length - 1] -
+          b.prayedDates[b.prayedDates.length - 1]
+      : b.prayedDates[b.prayedDates.length - 1] -
+          a.prayedDates[a.prayedDates.length - 1]
+  } else if (sortCategory === "Prayed Count") {
+    return sortOrder === "Ascending"
+      ? a.prayedDates.length - b.prayedDates.length > 0
+        ? 1
+        : -1
+      : b.prayedDates.length - a.prayedDates.length > 0
+      ? 1
+      : -1
+  } else if (sortCategory === "Title") {
+    return sortOrder === "Ascending"
+      ? a.prayerName.toLowerCase() > b.prayerName.toLowerCase()
+        ? 1
+        : -1
+      : b.prayerName.toLowerCase() > a.prayerName.toLowerCase()
+      ? 1
+      : -1
+  } else if (sortCategory === "Body") {
+    return sortOrder === "Ascending"
+      ? a.prayerText.toLowerCase() > b.prayerText.toLowerCase()
+        ? 1
+        : -1
+      : b.prayerText.toLowerCase() > a.prayerText.toLowerCase()
+      ? 1
+      : -1
+  } else if (sortCategory === "Category") {
+    let aWeight = 0
+    let bWeight = 0
+    aWeight = this.categories.find((c) => c.id === a.categoryId)?.sortOrder || 0
+    bWeight = this.categories.find((c) => c.id === b.categoryId)?.sortOrder || 0
+    return sortOrder === "Ascending" ? aWeight - bWeight : bWeight - aWeight
+  } else if (sortCategory === "Answered") {
+    return sortOrder === "Ascending"
+      ? a.answered === true
+        ? 1
+        : -1
+      : b.answered === true
+      ? 1
+      : -1
+  }
 }

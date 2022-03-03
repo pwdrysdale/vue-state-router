@@ -18,7 +18,7 @@
     <div class="grid w-full gap-4 lg:grid-cols-4">
       <div class="flex flex-col w-full lg:col-span-3">
         <PrayerItem
-          v-for="prayer in prayers"
+          v-for="prayer in sfPrayers"
           v-bind:key="prayer.id"
           v-bind="{ ...prayer }"
         />
@@ -43,10 +43,11 @@ export default {
   computed: {
     ...mapState({
       statePrayers: (state) => state.prayers.prayers,
+      sfPrayers: (state) => state.prayers.sfPrayers,
       categories: (state) => state.prayers.categories,
       sortOrder: (state) => state.prayers.sortHideOptions.sortOrder,
       sortCategory: (state) => state.prayers.sortHideOptions.sortCategory,
-      hideAnsered: (state) => state.prayers.sortHideOptions.hideAnsered,
+      hideAnswered: (state) => state.prayers.sortHideOptions.hideAnswered,
     }),
     prayers() {
       const hiddenCategoryIds = this.categories

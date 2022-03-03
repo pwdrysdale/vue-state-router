@@ -155,11 +155,11 @@ export default {
   async created() {
     const id = this.$route.params.id
     const statePrayers = this.$store.state.prayers
-    if (statePrayers.prayers && statePrayers.prayers.length === 0) {
+    if (statePrayers.sfPrayers && statePrayers.prayers.length === 0) {
       await this.$store.dispatch("prayers/getPrayersFromLocal")
     }
-    const { prayers: allPrayers } = statePrayers
-    const prayer = allPrayers.find((prayer) => prayer.id === id)
+    const { sfPrayers } = statePrayers
+    const prayer = sfPrayers.find((prayer) => prayer.id === id)
 
     this.id = prayer.id
     this.prayerName = prayer.prayerName
@@ -169,15 +169,15 @@ export default {
     this.answered = prayer.answered
     this.categoryId = prayer.categoryId
 
-    const nextIdx = allPrayers.findIndex((prayer) => prayer.id === id) + 1
+    const nextIdx = sfPrayers.findIndex((prayer) => prayer.id === id) + 1
     this.nextId =
-      nextIdx < allPrayers.length ? allPrayers[nextIdx].id : allPrayers[0].id
+      nextIdx < sfPrayers.length ? sfPrayers[nextIdx].id : sfPrayers[0].id
 
-    const previousIdx = allPrayers.findIndex((prayer) => prayer.id === id) - 1
+    const previousIdx = sfPrayers.findIndex((prayer) => prayer.id === id) - 1
     this.previousId =
       previousIdx >= 0
-        ? allPrayers[previousIdx].id
-        : allPrayers[allPrayers.length - 1].id
+        ? sfPrayers[previousIdx].id
+        : sfPrayers[sfPrayers.length - 1].id
   },
 }
 </script>
