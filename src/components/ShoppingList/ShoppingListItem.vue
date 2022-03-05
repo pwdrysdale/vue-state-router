@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    class="container flex justify-between p-2 mx-auto border-b-2 border-gray-800"
+  >
     <ToggleButton :checked="item.purchased" :toggleFn="togglePurchased" />
     <input v-model="nameModel" placeholder="Item name" />
     <input v-model="item.quantity" placeholder="Quantity" />

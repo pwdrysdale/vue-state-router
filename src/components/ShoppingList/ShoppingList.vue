@@ -1,12 +1,27 @@
 <template>
-  <div>
-    <div>
+  <div class="container mx-auto">
+    <div class="container w-full">
       <h3>Shopping List</h3>
-      <ShoppingListItem
-        v-for="item in items"
-        :key="item.id"
-        :item="{ ...item }"
-      />
+      <div class="button-group">
+        <button @click.prevent="cycleSortCriteria">
+          {{ sortFilterCriteria.sortBy }}
+        </button>
+        <button @click.prevent="toggleSortOrder">
+          {{ sortFilterCriteria.sortOrder }}
+        </button>
+        <button @click.prevent="hidePurchased">
+          {{ sortFilterCriteria.hidePurchased ? "Show" : "Hide" }} Purchased
+        </button>
+        <button @click.prevent="clearPurchased">Clear Purchased</button>
+        <button @click.prevent="clearAll">Clear All</button>
+      </div>
+      <div class="flex flex-col w-full">
+        <ShoppingListItem
+          v-for="item in filteredItems"
+          :key="item.id"
+          :item="{ ...item }"
+        />
+      </div>
       <div class="button-group">
         <input v-model="newItem.name" placeholder="New item" />
         <input v-model="newItem.quantity" placeholder="Quantity" />
@@ -30,11 +45,13 @@
     </div>
     <div>
       <h3>Categories</h3>
-      <Category
-        v-for="category in categories"
-        :key="category.id"
-        :category="{ ...category }"
-      />
+      <div class="flex flex-col gap-2">
+        <Category
+          v-for="category in categories"
+          :key="category.id"
+          :category="{ ...category }"
+        />
+      </div>
       <div class="button-group" :style="{ background: newCategory.colour }">
         <input v-model="newCategory.name" placeholder="New category" />
         <input v-model="newCategory.colour" placeholder="Colour" />
@@ -66,7 +83,7 @@ export default {
       newItem: {
         name: "",
         quantity: "",
-        category: "",
+        categoryId: "",
       },
       newCategory: {
         name: "",
@@ -80,6 +97,8 @@ export default {
     ...mapState({
       items: (state) => state.shoppingList.items,
       categories: (state) => state.shoppingList.categories,
+      sortFilterCriteria: (state) => state.shoppingList.sortFilterCriteria,
+      filteredItems: (state) => state.shoppingList.filteredItems,
     }),
     catColour() {
       return this.newItem.categoryId
@@ -93,10 +112,8 @@ export default {
   methods: {
     addItem() {
       this.$store.dispatch("shoppingList/addItem", this.newItem)
-      this.newItem = {
-        name: "",
-        quantity: "",
-      }
+      this.newItem.name = ""
+      this.newItem.quantity = ""
     },
     addCategory() {
       this.$store.dispatch("shoppingList/addCategory", this.newCategory)
@@ -106,6 +123,21 @@ export default {
         sortOrder: 0,
         visible: true,
       }
+    },
+    clearPurchased() {
+      this.$store.dispatch("shoppingList/clearPurchased")
+    },
+    clearAll() {
+      this.$store.dispatch("shoppingList/clearAllItems")
+    },
+    cycleSortCriteria() {
+      this.$store.dispatch("shoppingList/setFilterCriteria")
+    },
+    toggleSortOrder() {
+      this.$store.dispatch("shoppingList/toggleSortOrder")
+    },
+    hidePurchased() {
+      this.$store.dispatch("shoppingList/toggleHidePurchased")
     },
   },
   created() {

@@ -1,15 +1,20 @@
 <template>
-  <div :style="{ background: category.colour }">
+  <div
+    :style="{ background: category.colour }"
+    class="flex items-center justify-between px-2 rounded-md"
+  >
     <input v-model="category.name" placeholder="Category name" />
     <input v-model="category.colour" placeholder="Category colour" />
-    <input v-model.number="category.sortOrder" placeholder="Sort order" />
-    <ToggleButton
-      :checked="category.visible"
-      :toggleFn="toggleCategoryVisibility"
-    />
-    <button @click="deleteCategory">
-      <font-awesome-icon icon="trash" />
-    </button>
+    <input v-model.number="sortOrderModel" placeholder="Sort order" />
+    <div class="button-group">
+      <ToggleButton
+        :checked="category.visible"
+        :toggleFn="toggleCategoryVisibility"
+      />
+      <button @click="deleteCategory">
+        <font-awesome-icon icon="trash" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -33,6 +38,19 @@ export default {
     },
     deleteCategory() {
       this.$store.dispatch("shoppingList/removeCategory", this.category.id)
+    },
+  },
+  computed: {
+    sortOrderModel: {
+      get() {
+        return this.category.sortOrder
+      },
+      set(value) {
+        this.$store.dispatch("shoppingList/updateCategorySortOrder", {
+          id: this.category.id,
+          sortOrder: value,
+        })
+      },
     },
   },
 }
