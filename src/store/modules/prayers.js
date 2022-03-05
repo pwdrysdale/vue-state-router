@@ -25,7 +25,6 @@ export const mutations = {
   },
 
   SET_SF_PRAYERS(state, sortRandom = true) {
-    console.log(state)
     state.sfPrayers = state.prayers
       .sort((a, b) => sortPrayers(a, b, state, sortRandom))
       .filter(
@@ -206,7 +205,6 @@ export const actions = {
   },
 
   getPrayersFromLocal({ commit, dispatch }) {
-    console.log("Getting from local")
     const loaded = localStorage.getItem("vueprayers")
     if (loaded && JSON.parse(loaded).prayers) {
       const { prayers, categories, sortHideOptions } = JSON.parse(loaded)
@@ -412,7 +410,6 @@ export const actions = {
   },
 
   toggleCategoryVisibility({ dispatch, commit }, payload) {
-    console.log("Action", payload)
     commit("TOGGLE_CATEGORY_VISIBILITY", payload)
     dispatch("setPrayersInLocal")
     dispatch("setSFPrayers")
@@ -437,21 +434,12 @@ export const actions = {
   },
 
   setSFPrayers(store, sortRandom = true) {
-    console.log(store)
     store.commit("SET_SF_PRAYERS", sortRandom)
   },
 }
 
 const sortPrayers = (a, b, state, sortRandom = true) => {
   const { sortOrder, sortCategory } = state.sortHideOptions
-
-  // see if the state has changed
-
-  // only sort "Random" if the state change is to the sortCategory or sortOrder
-
-  // console.log(state.sortHideOptions.sortCategory)
-  // console.log(state.__ob__.value.sortHideOptions.sortCategory)
-  // console.log("Change detected")
 
   if (sortRandom && sortCategory === "Random") {
     return Math.random() - 0.5

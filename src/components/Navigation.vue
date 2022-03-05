@@ -15,6 +15,9 @@
     <router-link :to="{ name: 'TimerScreen' }">
       <button>Timer</button>
     </router-link>
+    <router-link :to="{ name: 'ShoppingList' }">
+      <button>Shopping</button>
+    </router-link>
     <!-- <router-link :to="{ name: 'Weather' }">
       <button>Weather</button>
     </router-link> -->

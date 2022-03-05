@@ -18,6 +18,7 @@ import * as counters from "./modules/counters"
 import * as prayers from "./modules/prayers"
 import * as readings from "./modules/readings"
 import * as todos from "./modules/todos"
+import * as shoppingList from "./modules/shoppingList"
 import * as timers from "./modules/timers"
 import * as toasts from "./modules/toasts"
 
@@ -31,6 +32,7 @@ const store = new Vuex.Store({
     prayers,
     readings,
     todos,
+    shoppingList,
     timers,
     toasts,
   },

@@ -45,6 +45,11 @@ const routes = [
     name: "Weather",
     component: () => import("../components/Weather/WeatherScreen.vue"),
   },
+  {
+    path: "/shopping",
+    name: "ShoppingList",
+    component: () => import("../components/ShoppingList/ShoppingList.vue"),
+  },
 ]
 
 const router = new VueRouter({
