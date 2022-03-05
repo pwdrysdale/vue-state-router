@@ -25,9 +25,9 @@
           (lastPrayedDate === null
             ? "Not yet prayed"
             : "Prayed " +
-              prayedDates.length +
+              this.prayer.prayedDates.length +
               " time" +
-              (prayedDates.length === 1 ? "" : "s"))
+              (this.prayer.prayedDates.length === 1 ? "" : "s"))
         }}
         <br v-if="lastPrayedDate" />
         {{ lastPrayedDate && "Last time " + lastPrayedDate }}
@@ -54,7 +54,7 @@
 
         <button
           @click="setAsAnswered"
-          :class="answered && 'bg-green-800 hover:bg-green-500'"
+          :class="prayer.answered && 'bg-green-800 hover:bg-green-500'"
         >
           <font-awesome-icon icon="check" />
         </button>
@@ -86,12 +86,6 @@ export default {
   data() {
     return {
       id: null,
-      prayerName: null,
-      prayerText: null,
-      createdDate: null,
-      prayedDates: null,
-      answered: null,
-      categoryId: null,
       nextId: null,
       previousId: null,
     }
@@ -100,10 +94,16 @@ export default {
   computed: {
     ...mapState({
       categories: (state) => state.prayers.categories,
+      sfPrayers: (state) => state.prayers.sfPrayers,
     }),
+    prayer() {
+      return this.sfPrayers.find(
+        (prayer) => prayer.id === this.id || prayer.id === this.$route.params.id
+      )
+    },
     nameModel: {
       get() {
-        return this.prayerName
+        return this.prayer.prayerName
       },
       set(name) {
         this.$store.dispatch("prayers/setPrayerName", { id: this.id, name })
@@ -111,7 +111,7 @@ export default {
     },
     textModel: {
       get() {
-        return this.prayerText
+        return this.prayer.prayerText
       },
       set(text) {
         this.$store.dispatch("prayers/setPrayerText", { id: this.id, text })
@@ -119,8 +119,8 @@ export default {
     },
     lastPrayedDate: {
       get() {
-        return this.prayedDates.length > 0
-          ? dayjs(this.prayedDates[this.prayedDates.length - 1])
+        return this.prayer.prayedDates.length > 0
+          ? dayjs(this.prayer.prayedDates[this.prayer.prayedDates.length - 1])
               .startOf("minute")
               .fromNow()
           : null
@@ -129,7 +129,7 @@ export default {
     categoryModel: {
       get() {
         return this.categories.find(
-          (category) => category.id === this.categoryId
+          (category) => category.id === this.prayer.categoryId
         )
       },
       set(category) {
@@ -154,20 +154,13 @@ export default {
 
   async created() {
     const id = this.$route.params.id
-    const statePrayers = this.$store.state.prayers
-    if (statePrayers.sfPrayers && statePrayers.prayers.length === 0) {
+    this.id = id
+
+    if (this.sfPrayers.length === 0) {
       await this.$store.dispatch("prayers/getPrayersFromLocal")
     }
-    const { sfPrayers } = statePrayers
-    const prayer = sfPrayers.find((prayer) => prayer.id === id)
 
-    this.id = prayer.id
-    this.prayerName = prayer.prayerName
-    this.prayerText = prayer.prayerText
-    this.createdDate = prayer.createdDate
-    this.prayedDates = prayer.prayedDates
-    this.answered = prayer.answered
-    this.categoryId = prayer.categoryId
+    const sfPrayers = this.sfPrayers
 
     const nextIdx = sfPrayers.findIndex((prayer) => prayer.id === id) + 1
     this.nextId =

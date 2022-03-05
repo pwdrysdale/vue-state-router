@@ -78,64 +78,6 @@ export default {
     toggleHideAnswered() {
       this.$store.dispatch("prayers/toggleShowAnswered")
     },
-    sortPrayers(a, b, sortOrder, sortCategory) {
-      if (sortCategory === "Random") {
-        return Math.random() - 0.5
-      }
-      if (sortCategory === "Created Date") {
-        return sortOrder === "Ascending"
-          ? a.createdDate - b.createdDate
-          : b.createdDate - a.createdDate
-      } else if (sortCategory === "Last Prayed") {
-        return sortOrder === "Ascending"
-          ? a.prayedDates.length === 0
-            ? -1
-            : a.prayedDates[a.prayedDates.length - 1] -
-              b.prayedDates[b.prayedDates.length - 1]
-          : b.prayedDates[b.prayedDates.length - 1] -
-              a.prayedDates[a.prayedDates.length - 1]
-      } else if (sortCategory === "Prayed Count") {
-        return sortOrder === "Ascending"
-          ? a.prayedDates.length - b.prayedDates.length > 0
-            ? 1
-            : -1
-          : b.prayedDates.length - a.prayedDates.length > 0
-          ? 1
-          : -1
-      } else if (sortCategory === "Title") {
-        return sortOrder === "Ascending"
-          ? a.prayerName > b.prayerName
-            ? 1
-            : -1
-          : b.prayerName > a.prayerName
-          ? 1
-          : -1
-      } else if (sortCategory === "Body") {
-        return sortOrder === "Ascending"
-          ? a.prayerText > b.prayerText
-            ? 1
-            : -1
-          : b.prayerText > a.prayerText
-          ? 1
-          : -1
-      } else if (sortCategory === "Category") {
-        let aWeight = 0
-        let bWeight = 0
-        aWeight =
-          this.categories.find((c) => c.id === a.categoryId)?.sortOrder || 0
-        bWeight =
-          this.categories.find((c) => c.id === b.categoryId)?.sortOrder || 0
-        return sortOrder === "Ascending" ? aWeight - bWeight : bWeight - aWeight
-      } else if (sortCategory === "Answered") {
-        return sortOrder === "Ascending"
-          ? a.answered === true
-            ? 1
-            : -1
-          : b.answered === true
-          ? 1
-          : -1
-      }
-    },
   },
   created: function () {
     this.$store.dispatch("prayers/getPrayersFromLocal")

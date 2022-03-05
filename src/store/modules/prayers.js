@@ -17,23 +17,17 @@ export const mutations = {
   LOAD_PRAYERS(state, payload) {
     state.prayers = payload.prayers || []
     state.categories = payload.categories || []
-    state.showHideOptions = payload.showHideOptions || {
-      sortOrder: "descending",
-      sortCategory: "createdDate",
+    state.sortHideOptions = payload.sortHideOptions || {
+      sortOrder: "Descending",
+      sortCategory: "Created Date",
       hideAnswered: false,
     }
   },
 
-  SET_SF_PRAYERS(state) {
+  SET_SF_PRAYERS(state, sortRandom = true) {
+    console.log(state)
     state.sfPrayers = state.prayers
-      .sort((a, b) =>
-        sortPrayers(
-          a,
-          b,
-          state.sortHideOptions.sortOrder,
-          state.sortHideOptions.sortCategory
-        )
-      )
+      .sort((a, b) => sortPrayers(a, b, state, sortRandom))
       .filter(
         (prayer) => !(prayer.answered && state.sortHideOptions.hideAnswered)
       )
@@ -166,7 +160,6 @@ export const mutations = {
   },
 
   TOGGLE_CATEGORY_VISIBILITY(state, { id }) {
-    console.log("Mutation", id)
     state.categories = state.categories.map((c) => {
       if (c.id === id) {
         return {
@@ -210,13 +203,13 @@ export const mutations = {
 export const actions = {
   setPrayersInLocal(context) {
     localStorage.setItem("vueprayers", JSON.stringify(context.state))
-    context.commit("SET_SF_PRAYERS")
   },
 
-  getPrayersFromLocal({ commit }) {
+  getPrayersFromLocal({ commit, dispatch }) {
+    console.log("Getting from local")
     const loaded = localStorage.getItem("vueprayers")
-    if (loaded) {
-      const { prayers, categories, showHideOptions } = JSON.parse(loaded)
+    if (loaded && JSON.parse(loaded).prayers) {
+      const { prayers, categories, sortHideOptions } = JSON.parse(loaded)
       const correctDates = prayers.map((p) => {
         return {
           ...p,
@@ -227,9 +220,20 @@ export const actions = {
       commit("LOAD_PRAYERS", {
         prayers: correctDates,
         categories: categories || [],
-        showHideOptions: showHideOptions || {},
+        sortHideOptions: sortHideOptions || {
+          sortOrder: "Descending",
+          hideAnswered: false,
+          sortCategory: "Created Date",
+        },
       })
-      commit("SET_SF_PRAYERS")
+      dispatch("setSFPrayers")
+    } else if (JSON.parse(loaded) instanceof Array) {
+      commit("LOAD_PRAYERS", {
+        prayers: loaded,
+        categories: [],
+        sortHideOptions: {},
+      })
+      dispatch("setSFPrayers")
     } else {
       const prayers = [
         {
@@ -243,7 +247,7 @@ export const actions = {
         },
       ]
       commit("LOAD_PRAYERS", { prayers, categories: [] })
-      commit("SET_SF_PRAYERS")
+      dispatch("setSFPrayers")
     }
   },
 
@@ -268,7 +272,7 @@ export const actions = {
       { root: true }
     )
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   removePrayer({ dispatch, commit }, id) {
@@ -282,19 +286,29 @@ export const actions = {
     )
     commit("REMOVE_PRAYER", id)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
-  setPrayerName({ dispatch, commit }, payload) {
+  setPrayerName({ dispatch, commit, state }, payload) {
     commit("SET_PRAYER_NAME", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    // dispatch("setSFPrayers")
+    if (state.sortHideOptions.sortCategory !== "Random") {
+      dispatch("setSFPrayers")
+    } else {
+      dispatch("setSFPrayers", false)
+    }
   },
 
   setPrayerText({ dispatch, commit }, payload) {
     commit("SET_PRAYER_TEXT", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    // dispatch("setSFPrayers")
+    if (state.sortHideOptions.sortCategory !== "Random") {
+      dispatch("setSFPrayers")
+    } else {
+      dispatch("setSFPrayers", false)
+    }
   },
 
   addPrayerDate({ dispatch, commit }, id) {
@@ -310,7 +324,11 @@ export const actions = {
       { root: true }
     )
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    if (state.sortHideOptions.sortCategory !== "Random") {
+      dispatch("setSFPrayers")
+    } else {
+      dispatch("setSFPrayers", false)
+    }
   },
 
   setPrayerAnswered({ dispatch, commit, state }, id) {
@@ -329,13 +347,21 @@ export const actions = {
     }
     commit("MARK_AS_ANSWERED", id)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    if (state.sortHideOptions.sortCategory !== "Random") {
+      dispatch("setSFPrayers")
+    } else {
+      dispatch("setSFPrayers", false)
+    }
   },
 
   setPrayerCategory({ dispatch, commit }, payload) {
     commit("SET_PRAYER_CATEGORY", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    if (state.sortHideOptions.sortCategory !== "Random") {
+      dispatch("setSFPrayers")
+    } else {
+      dispatch("setSFPrayers", false)
+    }
   },
 
   addCategory({ dispatch, commit }) {
@@ -348,7 +374,7 @@ export const actions = {
     }
     commit("ADD_CATEGORY", category)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   removeCategory({ dispatch, commit }, id) {
@@ -362,55 +388,72 @@ export const actions = {
     )
     commit("REMOVE_CATEGORY", id)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   setCategoryName({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_NAME", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    // if (state.sortHideOptions.sortCategory === "Category") {
+    //   dispatch("setSFPrayers")
+    // }
   },
 
   setSortOrder({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_ORDER", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   setCategoryColour({ dispatch, commit }, payload) {
     commit("SET_CATEGORY_COLOUR", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   toggleCategoryVisibility({ dispatch, commit }, payload) {
     console.log("Action", payload)
     commit("TOGGLE_CATEGORY_VISIBILITY", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   setSortCategory({ dispatch, commit }, payload) {
     commit("SET_SORT_CATEGORY", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   setPrayerSortOrder({ dispatch, commit }, payload) {
     commit("TOGGLE_SORT_ORDER", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
   },
 
   toggleShowAnswered({ dispatch, commit }, payload) {
     commit("TOGGLE_HIDE_ANSWERED", payload)
     dispatch("setPrayersInLocal")
-    commit("SET_SF_PRAYERS")
+    dispatch("setSFPrayers")
+  },
+
+  setSFPrayers(store, sortRandom = true) {
+    console.log(store)
+    store.commit("SET_SF_PRAYERS", sortRandom)
   },
 }
 
-const sortPrayers = (a, b, sortOrder, sortCategory) => {
-  if (sortCategory === "Random") {
+const sortPrayers = (a, b, state, sortRandom = true) => {
+  const { sortOrder, sortCategory } = state.sortHideOptions
+
+  // see if the state has changed
+
+  // only sort "Random" if the state change is to the sortCategory or sortOrder
+
+  // console.log(state.sortHideOptions.sortCategory)
+  // console.log(state.__ob__.value.sortHideOptions.sortCategory)
+  // console.log("Change detected")
+
+  if (sortRandom && sortCategory === "Random") {
     return Math.random() - 0.5
   }
   if (sortCategory === "Created Date") {
@@ -452,8 +495,10 @@ const sortPrayers = (a, b, sortOrder, sortCategory) => {
   } else if (sortCategory === "Category") {
     let aWeight = 0
     let bWeight = 0
-    aWeight = this.categories.find((c) => c.id === a.categoryId)?.sortOrder || 0
-    bWeight = this.categories.find((c) => c.id === b.categoryId)?.sortOrder || 0
+    aWeight =
+      state.categories.find((c) => c.id === a.categoryId)?.sortOrder || 0
+    bWeight =
+      state.categories.find((c) => c.id === b.categoryId)?.sortOrder || 0
     return sortOrder === "Ascending" ? aWeight - bWeight : bWeight - aWeight
   } else if (sortCategory === "Answered") {
     return sortOrder === "Ascending"
