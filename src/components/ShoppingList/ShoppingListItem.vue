@@ -1,11 +1,36 @@
 <template>
   <div
-    class="container flex justify-between p-2 mx-auto border-b-2 border-gray-800"
+    class="container flex flex-col items-start justify-between border-b-2 border-gray-800 md:py-2 gap-0mx-auto md:gap-2 md:items-center md:flex-row"
   >
-    <ToggleButton :checked="item.purchased" :toggleFn="togglePurchased" />
-    <input v-model="nameModel" placeholder="Item name" />
-    <input v-model="item.quantity" placeholder="Quantity" />
-    <select v-model="categoryModel" :style="{ background: catColour }">
+    <ToggleButton
+      :checked="item.purchased"
+      :toggleFn="togglePurchased"
+      class="hidden md:inline-block"
+    />
+    <div class="flex flex-row w-full md:flex-1 space-between">
+      <input v-model="nameModel" placeholder="Item name" class="flex-1" />
+      <div class="button-group">
+        <ToggleButton
+          :checked="item.purchased"
+          :toggleFn="togglePurchased"
+          class="inline-block md:hidden"
+        />
+        <button @click.prevent="deleteItem" class="inline-block md:hidden">
+          <font-awesome-icon icon="trash" />
+        </button>
+      </div>
+    </div>
+    <input
+      v-model="item.quantity"
+      placeholder="Quantity"
+      class="flex-1"
+      v-show="sortFilterCriteria.hideQuantity"
+    />
+    <select
+      v-model="categoryModel"
+      :style="{ background: catColour }"
+      class="w-full md:w-min"
+    >
       <option
         v-for="category in categories"
         :key="category.id"
@@ -14,9 +39,16 @@
         {{ category.name }}
       </option>
     </select>
-    <button @click.prevent="deleteItem">
-      <font-awesome-icon icon="trash" />
-    </button>
+    <div class="hidden md:inline-block">
+      <ToggleButton
+        :checked="item.purchased"
+        :toggleFn="togglePurchased"
+        class="inline-block md:hidden"
+      />
+      <button @click.prevent="deleteItem">
+        <font-awesome-icon icon="trash" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -35,6 +67,7 @@ export default {
   computed: {
     ...mapState({
       categories: (state) => state.shoppingList.categories,
+      sortFilterCriteria: (state) => state.shoppingList.sortFilterCriteria,
     }),
     catColour() {
       return this.item.categoryId

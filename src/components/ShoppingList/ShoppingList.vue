@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
-    <div class="container w-full">
-      <h3>Shopping List</h3>
+    <div class="container flex-col items-center w-full">
+      <h3 class="text-center">Shopping</h3>
       <div class="button-group">
         <button @click.prevent="cycleSortCriteria">
           {{ sortFilterCriteria.sortBy }}
@@ -12,17 +12,24 @@
         <button @click.prevent="hidePurchased">
           {{ sortFilterCriteria.hidePurchased ? "Show" : "Hide" }} Purchased
         </button>
+        <button @click.prevent="hideQuantity">
+          {{ sortFilterCriteria.hideQuantity ? "Show" : "Hide" }} Quantity
+        </button>
         <button @click.prevent="clearPurchased">Clear Purchased</button>
         <button @click.prevent="clearAll">Clear All</button>
       </div>
       <div class="flex flex-col w-full">
+        <h3 class="mx-2">List</h3>
         <ShoppingListItem
           v-for="item in filteredItems"
           :key="item.id"
           :item="{ ...item }"
         />
       </div>
-      <div class="button-group">
+      <div
+        class="flex flex-col items-start gap-2 m-2 md:flex-row md:items-center"
+      >
+        <p>Add new item:</p>
         <input v-model="newItem.name" placeholder="New item" />
         <input v-model="newItem.quantity" placeholder="Quantity" />
         <select
@@ -43,8 +50,8 @@
         </button>
       </div>
     </div>
-    <div>
-      <h3>Categories</h3>
+    <div class="py-2">
+      <h3 class="mx-2">Categories</h3>
       <div class="flex flex-col gap-2">
         <Category
           v-for="category in categories"
@@ -52,7 +59,11 @@
           :category="{ ...category }"
         />
       </div>
-      <div class="button-group" :style="{ background: newCategory.colour }">
+      <div
+        class="flex flex-col items-start gap-2 m-2 md:flex-row md:items-center"
+        :style="{ background: newCategory.colour }"
+      >
+        <p>Add new category:</p>
         <input v-model="newCategory.name" placeholder="New category" />
         <input v-model="newCategory.colour" placeholder="Colour" />
         <input
@@ -138,6 +149,9 @@ export default {
     },
     hidePurchased() {
       this.$store.dispatch("shoppingList/toggleHidePurchased")
+    },
+    hideQuantity() {
+      this.$store.dispatch("shoppingList/toggleHideQuantity")
     },
   },
   created() {

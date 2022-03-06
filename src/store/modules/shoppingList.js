@@ -10,6 +10,7 @@ export const state = {
     sortBy: "Category",
     sortOrder: "Ascending",
     hidePurchased: true,
+    hideQuantity: false,
   },
 }
 
@@ -130,6 +131,11 @@ export const mutations = {
 
   SET_SORT_FILTER_CRITERIA(state, criteria) {
     state.sortFilterCriteria = criteria
+  },
+
+  TOGGLE_HIDE_QUANTITY(state) {
+    state.sortFilterCriteria.hideQuantity =
+      !state.sortFilterCriteria.hideQuantity
   },
 }
 
@@ -275,6 +281,12 @@ export const actions = {
   setSFList({ commit }) {
     commit("SET_SF_LIST")
   },
+
+  toggleHideQuantity({ commit, dispatch }) {
+    commit("TOGGLE_HIDE_QUANTITY")
+    dispatch("setShoppingInStorage")
+    dispatch("setSFList")
+  },
 }
 
 const sortItems = (a, b, state) => {
@@ -319,7 +331,7 @@ const sortItems = (a, b, state) => {
     }
   }
 
-  if (sortBy === "Modified Date") {
+  if (sortBy === "Date Modified") {
     if (sortOrder === "Ascending") {
       return a.dateModified >= b.dateModified ? 1 : -1
     } else {

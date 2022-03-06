@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{ background: category.colour }"
-    class="flex items-center justify-between px-2 rounded-md"
+    class="flex flex-col items-start justify-between p-2 rounded-md md:py-0 md:items-center md:flex-row"
   >
     <input v-model="category.name" placeholder="Category name" />
     <input v-model="category.colour" placeholder="Category colour" />
