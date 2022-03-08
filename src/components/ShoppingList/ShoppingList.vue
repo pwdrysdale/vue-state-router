@@ -13,7 +13,10 @@
           {{ sortFilterCriteria.hidePurchased ? "Show" : "Hide" }} Purchased
         </button>
         <button @click.prevent="hideQuantity">
-          {{ sortFilterCriteria.hideQuantity ? "Show" : "Hide" }} Quantity
+          {{ !sortFilterCriteria.hideQuantity ? "Show" : "Hide" }} Quantity
+        </button>
+        <button @click.prevent="hideCategory">
+          {{ sortFilterCriteria.hideCategory ? "Show" : "Hide" }} Category
         </button>
         <button @click.prevent="clearPurchased">Clear Purchased</button>
         <button @click.prevent="clearAll">Clear All</button>
@@ -27,7 +30,7 @@
         />
       </div>
       <div
-        class="flex flex-col items-start gap-2 m-2 md:flex-row md:items-center"
+        class="flex flex-col items-start gap-2 m-2 md:flex-row md:items-center md:justify-center"
       >
         <p>Add new item:</p>
         <input v-model="newItem.name" placeholder="New item" />
@@ -37,6 +40,7 @@
           v-model="newItem.categoryId"
           :style="{ background: catColour }"
         >
+          <option disabled value="">Select category</option>
           <option
             v-for="category in categories"
             :key="category.id"
@@ -60,7 +64,7 @@
         />
       </div>
       <div
-        class="flex flex-col items-start gap-2 m-2 md:flex-row md:items-center"
+        class="flex flex-col items-start gap-2 p-2 my-2 rounded-md md:items-center md:justify-center md:flex-row"
         :style="{ background: newCategory.colour }"
       >
         <p>Add new category:</p>
@@ -152,6 +156,9 @@ export default {
     },
     hideQuantity() {
       this.$store.dispatch("shoppingList/toggleHideQuantity")
+    },
+    hideCategory() {
+      this.$store.dispatch("shoppingList/toggleHideCategory")
     },
   },
   created() {

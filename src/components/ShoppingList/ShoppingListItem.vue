@@ -29,8 +29,12 @@
     <select
       v-model="categoryModel"
       :style="{ background: catColour }"
+      v-show="!sortFilterCriteria.hideCategory"
       class="w-full md:w-min"
+      placeholder="Category"
     >
+      <option disabled class="text-white" value="">Select category</option>
+
       <option
         v-for="category in categories"
         :key="category.id"
@@ -81,7 +85,7 @@ export default {
         return this.item.name
       },
       set(value) {
-        this.$store.dispatch("shoppingList/setItemName", {
+        this.$store.dispatch("shoppingList/updateItemName", {
           id: this.item.id,
           name: value,
         })
@@ -92,7 +96,6 @@ export default {
         return this.item.categoryId
       },
       set(value) {
-        console.log("setting category", value)
         this.$store.dispatch("shoppingList/setItemCategory", {
           id: this.item.id,
           categoryId: value,

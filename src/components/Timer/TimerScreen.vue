@@ -9,7 +9,9 @@
       }"
     />
     <div class="button-group">
-      <button @click="addTimer">Add Timer</button>
+      <button @click="addTimer">
+        <font-awesome-icon icon="plus" />
+      </button>
     </div>
   </div>
 </template>

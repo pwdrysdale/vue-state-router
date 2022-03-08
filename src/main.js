@@ -18,6 +18,8 @@ import {
   faPray,
   faPlus,
   faEye,
+  faAngleRight,
+  faAngleLeft,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
@@ -35,6 +37,8 @@ library.add([
   faPray,
   faPlus,
   faEye,
+  faAngleRight,
+  faAngleLeft,
 ])
 
 Vue.component("font-awesome-icon", FontAwesomeIcon)

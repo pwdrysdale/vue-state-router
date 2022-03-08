@@ -3,8 +3,8 @@
     :style="{ background: category.colour }"
     class="flex flex-col items-start justify-between p-2 rounded-md md:py-0 md:items-center md:flex-row"
   >
-    <input v-model="category.name" placeholder="Category name" />
-    <input v-model="category.colour" placeholder="Category colour" />
+    <input v-model="nameModel" placeholder="Category name" />
+    <input v-model="colorModel" placeholder="Category colour" />
     <input v-model.number="sortOrderModel" placeholder="Sort order" />
     <div class="button-group">
       <ToggleButton
@@ -49,6 +49,28 @@ export default {
         this.$store.dispatch("shoppingList/updateCategorySortOrder", {
           id: this.category.id,
           sortOrder: value,
+        })
+      },
+    },
+    colorModel: {
+      get() {
+        return this.category.colour
+      },
+      set(value) {
+        this.$store.dispatch("shoppingList/updateCategoryColour", {
+          id: this.category.id,
+          colour: value,
+        })
+      },
+    },
+    nameModel: {
+      get() {
+        return this.category.name
+      },
+      set(value) {
+        this.$store.dispatch("shoppingList/updateCategoryName", {
+          id: this.category.id,
+          name: value,
         })
       },
     },

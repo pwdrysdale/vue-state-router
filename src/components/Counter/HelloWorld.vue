@@ -13,7 +13,9 @@
       v-bind:key="counter.id"
       v-bind="{ ...counter }"
     />
-    <button @click="addCounter">Add Counter</button>
+    <button @click="addCounter">
+      <font-awesome-icon icon="plus" />
+    </button>
   </div>
 </template>
 

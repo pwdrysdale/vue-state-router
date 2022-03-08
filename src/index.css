@@ -63,7 +63,7 @@ button {
 }
 
 .category-group {
-  @apply flex flex-row items-center content-between justify-between w-full;
+  @apply flex flex-row items-center content-between justify-between w-96;
 }
 
 .category-group input {

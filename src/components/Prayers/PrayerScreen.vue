@@ -15,15 +15,15 @@
         <font-awesome-icon icon="plus" />
       </button>
     </div>
-    <div class="grid w-full gap-4 lg:grid-cols-4">
-      <div class="flex flex-col w-full lg:col-span-3">
-        <PrayerItem
-          v-for="prayer in sfPrayers"
-          v-bind:key="prayer.id"
-          v-bind="{ ...prayer }"
-        />
-      </div>
+    <div class="flex flex-col w-full gap-4 lg:grid-cols-4">
+      <h3>Categories</h3>
       <CategoryManagement />
+      <h3>All Prayers</h3>
+      <PrayerItem
+        v-for="prayer in sfPrayers"
+        v-bind:key="prayer.id"
+        v-bind="{ ...prayer }"
+      />
     </div>
   </div>
 </template>

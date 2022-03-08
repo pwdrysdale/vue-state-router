@@ -11,11 +11,16 @@ export const state = {
     sortOrder: "Ascending",
     hidePurchased: true,
     hideQuantity: false,
+    hideCategory: false,
   },
 }
 
 export const mutations = {
   SET_SF_LIST(state) {
+    const hiddenCategoryIds = state.categories
+      .filter((category) => !category.visible)
+      .map((category) => category.id)
+
     state.filteredItems = state.items
       .filter((item) => {
         if (state.sortFilterCriteria.hidePurchased) {
@@ -24,6 +29,7 @@ export const mutations = {
           return item
         }
       })
+      .filter((item) => !hiddenCategoryIds.includes(item.categoryId))
       .sort((a, b) => sortItems(a, b, state))
   },
 
@@ -75,13 +81,22 @@ export const mutations = {
   },
 
   UPDATE_ITEM_NAME(state, { id, name }) {
-    const item = state.items.find((item) => item.id === id)
-    item.name = name
+    state.items = state.items.map((item) =>
+      item.id === id ? { ...item, name, dateModified: new Date() } : item
+    )
   },
 
   UPDATE_CATEGORY_NAME(state, { id, name }) {
+    state.categories = state.categories.map((category) =>
+      category.id === id
+        ? { ...category, name, dateModified: new Date() }
+        : category
+    )
+  },
+
+  UPDATE_CATEGORY_COLOUR(state, { id, colour }) {
     const category = state.categories.find((category) => category.id === id)
-    category.name = name
+    category.colour = colour
     category.dateModified = new Date()
   },
 
@@ -137,6 +152,11 @@ export const mutations = {
     state.sortFilterCriteria.hideQuantity =
       !state.sortFilterCriteria.hideQuantity
   },
+
+  TOGGLE_HIDE_CATEGORY(state) {
+    state.sortFilterCriteria.hideCategory =
+      !state.sortFilterCriteria.hideCategory
+  },
 }
 
 export const actions = {
@@ -188,7 +208,28 @@ export const actions = {
     dispatch("setShoppingInStorage")
   },
 
-  togglePurchased({ commit, dispatch }, id) {
+  togglePurchased({ commit, dispatch, state }, id) {
+    const item = state.items.find((item) => item.id === id)
+
+    if (!item.purchased) {
+      const toastOptions = [
+        "Right next to the chicken!",
+        "Did.",
+        "Yum!",
+        "Get that shopping done!",
+        "Boom.",
+        "You go Glen Coco!",
+      ]
+
+      const toast =
+        toastOptions[Math.floor(Math.random() * toastOptions.length)]
+      dispatch(
+        "toasts/addToasts",
+        { type: "success", text: toast },
+        { root: true }
+      )
+    }
+
     commit("SET_ITEM_PURCHASED", id)
     dispatch("setSFList")
     dispatch("setShoppingInStorage")
@@ -214,6 +255,12 @@ export const actions = {
 
   updateCategoryName({ commit, dispatch }, { id, name }) {
     commit("UPDATE_CATEGORY_NAME", { id, name })
+    dispatch("setSFList")
+    dispatch("setShoppingInStorage")
+  },
+
+  updateCategoryColour({ commit, dispatch }, { id, colour }) {
+    commit("UPDATE_CATEGORY_COLOUR", { id, colour })
     dispatch("setSFList")
     dispatch("setShoppingInStorage")
   },
@@ -287,18 +334,24 @@ export const actions = {
     dispatch("setShoppingInStorage")
     dispatch("setSFList")
   },
+
+  toggleHideCategory({ commit, dispatch }) {
+    commit("TOGGLE_HIDE_CATEGORY")
+    dispatch("setShoppingInStorage")
+    dispatch("setSFList")
+  },
 }
 
 const sortItems = (a, b, state) => {
   const { sortOrder, sortBy } = state.sortFilterCriteria
 
   if (sortBy === "Category") {
-    const aCategory = state.categories.find(
-      (category) => category.id === a.categoryId
-    ).sortOrder
-    const bCategory = state.categories.find(
-      (category) => category.id === b.categoryId
-    ).sortOrder
+    const aCategory =
+      state.categories.find((category) => category.id === a.categoryId)
+        ?.sortOrder || 0
+    const bCategory =
+      state.categories.find((category) => category.id === b.categoryId)
+        ?.sortOrder || 0
 
     if (sortOrder === "Ascending") {
       return aCategory >= bCategory ? 1 : -1

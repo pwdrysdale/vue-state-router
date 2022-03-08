@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggle"
-    class="transition-all duration-300"
+    class="w-12 transition-all duration-300"
     :class="
       checked
         ? 'bg-green-800 hover:bg-green-500'

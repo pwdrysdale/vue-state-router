@@ -34,12 +34,16 @@
           params: { day: ((((day.day - 2) % 365) + 365) % 365) + 1 },
         }"
       >
-        <button>Previous</button>
+        <button>
+          <font-awesome-icon icon="angle-left" />
+        </button>
       </router-link>
       <router-link
         :to="{ name: 'Reading', params: { day: (day.day % 365) + 1 } }"
       >
-        <button>Next</button>
+        <button>
+          <font-awesome-icon icon="angle-right" />
+        </button>
       </router-link>
     </div>
   </div>

@@ -64,10 +64,14 @@
       </div>
       <div class="button-group">
         <router-link :to="{ name: 'Prayer', params: { id: previousId } }">
-          <button>Previous</button>
+          <button>
+            <font-awesome-icon icon="angle-left" />
+          </button>
         </router-link>
         <router-link :to="{ name: 'Prayer', params: { id: nextId } }">
-          <button>Next</button>
+          <button>
+            <font-awesome-icon icon="angle-right" />
+          </button>
         </router-link>
       </div>
     </div>

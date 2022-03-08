@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container flex flex-col items-end justify-between gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
+    class="container flex flex-col items-end justify-between w-full gap-4 py-1 my-1 border-b-2 border-gray-800 space-between"
   >
     <div class="flex flex-col self-start w-full">
       <input

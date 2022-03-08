@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col items-start w-full gap-2">
+  <div
+    class="flex items-start gap-2 overflow-scroll overflow-x-scroll rounded-md min-w-fit"
+  >
     <div
       v-for="category in categories"
       v-bind:key="category.id"
@@ -25,7 +27,7 @@
         />
       </div>
       <div class="category-group">
-        <label for="category-sort-order">Sort Order: </label>
+        <label for="category-sort-order whitespace-nowrap">Sort Order: </label>
         <input
           :value="category.sortOrder"
           @input="setSortOrder(category.id, $event.target.value)"

@@ -4,6 +4,7 @@ export const namespaced = true
 
 export const state = () => ({
   todos: [],
+  categories: [],
 })
 
 export const actions = {
@@ -20,7 +21,7 @@ export const actions = {
       },
       { root: true }
     )
-    context.commit("addTodoMutation", newTodo)
+    context.commit("ADD_TODO", newTodo)
     context.dispatch("setInLocal")
   },
 
@@ -33,7 +34,7 @@ export const actions = {
       },
       { root: true }
     )
-    context.commit("removeTodoMutation", todo)
+    context.commit("REMOVE_TODO", todo)
     context.dispatch("setInLocal")
   },
 
@@ -75,22 +76,32 @@ export const actions = {
       )
     }
 
-    context.commit("setToDoMutation", payload)
+    context.commit("SET_TODOS", payload)
     context.dispatch("setInLocal")
   },
 
   getTodosFromLocal(context) {
-    const todos = localStorage.getItem("vuetodos")
-      ? JSON.parse(localStorage.getItem("vuetodos"))
-      : []
-    const datesFixed = todos.todos.map((todo) => {
+    const load = localStorage.getItem("vuetodos")
+    const parsed = JSON.parse(load)
+
+    if (parsed instanceof Array) {
+      context.commit("SET_TODOS", parsed)
+      return
+    }
+
+    const { todos, categories } = parsed
+    const categoryTodos =
+      todos.map((t) => (!t.categoryId ? { ...t, categoryId: "" } : t)) || []
+
+    const datesFixed = categoryTodos.map((todo) => {
       return {
         ...todo,
         dueDate: new Date(todo.dueDate),
         createdDate: new Date(todo.createdDate),
       }
     })
-    context.commit("loadTodos", datesFixed)
+    context.commit("LOAD_TODOS", datesFixed)
+    context.commit("LOAD_CATEGORIES", categories || [])
   },
 
   clearCompleted({ state, commit, dispatch }) {
@@ -125,7 +136,7 @@ export const actions = {
       },
       { root: true }
     )
-    commit("clearCompletedTodosMutation")
+    commit("CLEAR_COMPLETED_TODOS")
     dispatch("setInLocal")
   },
 
@@ -144,35 +155,71 @@ export const actions = {
       type: "success",
     })
 
-    context.commit("clearAllTodosMutation")
+    context.commit("CLEAR_ALL_TODOS")
+    context.dispatch("setInLocal")
+  },
+
+  addCategory(context, newCategory) {
+    context.commit("ADD_CATEGORY", {
+      ...newCategory,
+      id: uuid(),
+      sortOrder: 0,
+      visible: true,
+    })
+    context.dispatch("setInLocal")
+  },
+
+  removeCategory(context, category) {
+    context.commit("REMOVE_CATEGORY", category)
+    context.dispatch("setInLocal")
+  },
+
+  setCategoryName(context, payload) {
+    context.commit("SET_CATEGORY_NAME", payload)
+    context.dispatch("setInLocal")
+  },
+
+  setCategorySortOrder(context, payload) {
+    context.commit("SET_CATEGORY_SORT_ORDER", payload)
+    context.dispatch("setInLocal")
+  },
+
+  toggleCategoryVisibility(context, payload) {
+    context.commit("TOGGLE_CATEGORY_VISIBILITY", payload)
+    context.dispatch("setInLocal")
+  },
+
+  setCategoryColour(context, payload) {
+    context.commit("SET_CATEGORY_COLOUR", payload)
     context.dispatch("setInLocal")
   },
 }
 
 export const mutations = {
-  loadTodos(state, todos) {
+  LOAD_TODOS(state, todos) {
     state.todos = todos
   },
-  addTodoMutation(state, todo) {
+  ADD_TODO(state, todo) {
     state.todos.push({
       id: uuid(),
       text: todo,
       done: false,
+      categoryId: "",
       dueDate: new Date(),
       createdDate: new Date(),
       priority: 3,
     })
   },
-  removeTodoMutation(state, todo) {
+  REMOVE_TODO(state, todo) {
     state.todos = state.todos.filter((t) => t.id !== todo.id)
   },
-  clearCompletedTodosMutation(state) {
+  CLEAR_COMPLETED_TODOS(state) {
     state.todos = state.todos.filter((t) => !t.completed)
   },
-  clearAllTodosMutation(state) {
+  CLEAR_ALL_TODOS(state) {
     state.todos = []
   },
-  setToDoMutation(state, payload) {
+  SET_TODOS(state, payload) {
     state.todos = state.todos.map((t) => {
       if (t.id === payload.id) {
         return {
@@ -182,5 +229,76 @@ export const mutations = {
       }
       return t
     })
+  },
+  ADD_CATEGORY(state, category) {
+    state.categories.push(category)
+  },
+
+  UPDATE_CATEGORY_NAME(state, payload) {
+    state.categories = state.categories.map((category) => {
+      if (category.id === payload.id) {
+        return {
+          ...category,
+          name: payload.name,
+        }
+      }
+      return category
+    })
+  },
+
+  SET_CATEGORY_COLOUR(state, payload) {
+    state.categories = state.categories.map((category) => {
+      if (category.id === payload.id) {
+        return {
+          ...category,
+          colour: payload.colour,
+        }
+      }
+      return category
+    })
+  },
+
+  SET_CATEGORY_SORT_ORDER(state, payload) {
+    state.categories = state.categories.map((category) => {
+      if (category.id === payload.id) {
+        return {
+          ...category,
+          sortOrder: payload.sortOrder,
+        }
+      }
+      return category
+    })
+  },
+
+  REMOVE_CATEGORY(state, category) {
+    state.categories = state.categories.filter((c) => c.id !== category.id)
+  },
+
+  SET_TODOS_CATEGORY(state, payload) {
+    state.todos = state.todos.map((todo) => {
+      if (todo.id === payload.id) {
+        return {
+          ...todo,
+          categoryId: payload.categoryId,
+        }
+      }
+      return todo
+    })
+  },
+
+  TOGGLE_CATEGORY_VISIBILITY(state, payload) {
+    state.categories = state.categories.map((category) => {
+      if (category.id === payload.id) {
+        return {
+          ...category,
+          visible: !category.visible,
+        }
+      }
+      return category
+    })
+  },
+
+  LOAD_CATEGORIES(state, categories) {
+    state.categories = categories
   },
 }
