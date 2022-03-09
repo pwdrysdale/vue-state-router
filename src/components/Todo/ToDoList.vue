@@ -1,15 +1,17 @@
 <template>
   <div class="container mx-auto">
-    <h3 class="text-center">To Do's</h3>
+    <h3>Categories</h3>
+    <CategoryManagement />
+    <h3>To Do's</h3>
     <div class="button-group">
-      <button v-on:click="changeSortCategory">{{ sort }}</button>
+      <button v-on:click="changeSortCategory">{{ sortBy }}</button>
       <button v-on:click="changeSortOrder">
         <font-awesome-icon v-if="sortOrder === 'Ascending'" icon="arrow-up" />
         <font-awesome-icon v-else icon="arrow-down" />
       </button>
     </div>
     <div class="list">
-      <ToDoListItem v-for="todo in todos" v-bind:key="todo.id" :todo="todo" />
+      <ToDoListItem v-for="todo in sfTodos" v-bind:key="todo.id" :todo="todo" />
     </div>
 
     <div class="flex w-full button-group">
@@ -24,23 +26,24 @@
 </template>
 
 <script>
+import CategoryManagement from "./CategoryManagement.vue"
 import ToDoListItem from "../Todo/ToDoListItem.vue"
+import { mapState } from "vuex"
 
 export default {
   name: "ToDoList",
+
   data() {
     return {
       newTodo: "",
-      sort: "Created Date",
-      sortOrder: "Ascending",
     }
   },
   computed: {
-    todos() {
-      return [...this.$store.state.todos.todos].sort((a, b) =>
-        this.sortBy(a, b, this.sort, this.sortOrder)
-      )
-    },
+    ...mapState({
+      sfTodos: (state) => state.todos.sfTodos,
+      sortOrder: (state) => state.todos.sfOptions.sortOrder,
+      sortBy: (state) => state.todos.sfOptions.sortBy,
+    }),
   },
   methods: {
     addTodo() {
@@ -48,20 +51,10 @@ export default {
       this.newTodo = ""
     },
     changeSortCategory() {
-      const options = [
-        "Created Date",
-        "Due Date",
-        "Priority",
-        "Completed",
-        "Todo Text",
-      ]
-      const index = options.indexOf(this.sort)
-      const nextIndex = (index + 1) % options.length
-      this.sort = options[nextIndex]
+      this.$store.dispatch("todos/setSortBy")
     },
     changeSortOrder() {
-      this.sortOrder =
-        this.sortOrder === "Ascending" ? "Descending" : "Ascending"
+      this.$store.dispatch("todos/toggleSortOrder")
     },
     clearCompleted() {
       this.$store.dispatch("todos/clearCompleted")
@@ -69,39 +62,13 @@ export default {
     clearAll() {
       this.$store.dispatch("todos/clearAll")
     },
-    sortBy(a, b, sort, sortOrder) {
-      if (sort === "Created Date") {
-        return sortOrder === "Ascending"
-          ? a.createdDate - b.createdDate
-          : b.createdDate - a.createdDate
-      } else if (sort === "Due Date") {
-        return sortOrder === "Ascending"
-          ? a.dueDate - b.dueDate
-          : b.dueDate - a.dueDate
-      } else if (sort === "Priority") {
-        return sortOrder === "Ascending"
-          ? a.priority - b.priority
-          : b.priority - a.priority
-      } else if (sort === "Completed") {
-        return sortOrder === "Ascending"
-          ? a.completed
-            ? -1
-            : 1
-          : a.completed
-          ? 1
-          : -1
-      } else if (sort === "Todo Text") {
-        return sortOrder === "Ascending"
-          ? a.text.localeCompare(b.text)
-          : b.text.localeCompare(a.text)
-      }
-    },
   },
   async created() {
     this.$store.dispatch("todos/getTodosFromLocal")
   },
   components: {
     ToDoListItem,
+    CategoryManagement,
   },
 }
 </script>

@@ -4,12 +4,31 @@ export const namespaced = true
 
 export const state = () => ({
   todos: [],
+  sfTodos: [],
   categories: [],
+  sfOptions: {
+    sortOrder: "Ascending",
+    sortBy: "Created Date",
+  },
 })
 
 export const actions = {
   setInLocal() {
     localStorage.setItem("vuetodos", JSON.stringify(this.state.todos))
+  },
+
+  setSFTodos({ commit }) {
+    commit("SET_SF_TODOS")
+  },
+
+  toggleSortOrder({ commit, dispatch }) {
+    commit("TOGGLE_SORT_ORDER")
+    dispatch("setSFTodos")
+  },
+
+  setSortBy({ commit, dispatch }) {
+    commit("SET_SORT_BY")
+    dispatch("setSFTodos")
   },
 
   addTodo(context, newTodo) {
@@ -23,6 +42,7 @@ export const actions = {
     )
     context.commit("ADD_TODO", newTodo)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   removeTodo(context, todo) {
@@ -36,6 +56,7 @@ export const actions = {
     )
     context.commit("REMOVE_TODO", todo)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   setTodo(context, payload) {
@@ -78,6 +99,7 @@ export const actions = {
 
     context.commit("SET_TODOS", payload)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   getTodosFromLocal(context) {
@@ -102,6 +124,7 @@ export const actions = {
     })
     context.commit("LOAD_TODOS", datesFixed)
     context.commit("LOAD_CATEGORIES", categories || [])
+    context.dispatch("setSFTodos")
   },
 
   clearCompleted({ state, commit, dispatch }) {
@@ -138,6 +161,7 @@ export const actions = {
     )
     commit("CLEAR_COMPLETED_TODOS")
     dispatch("setInLocal")
+    dispatch("setSFTodos")
   },
 
   clearAll(context) {
@@ -157,6 +181,7 @@ export const actions = {
 
     context.commit("CLEAR_ALL_TODOS")
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   addCategory(context, newCategory) {
@@ -167,31 +192,43 @@ export const actions = {
       visible: true,
     })
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   removeCategory(context, category) {
     context.commit("REMOVE_CATEGORY", category)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   setCategoryName(context, payload) {
-    context.commit("SET_CATEGORY_NAME", payload)
+    context.commit("UPDATE_CATEGORY_NAME", payload)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   setCategorySortOrder(context, payload) {
     context.commit("SET_CATEGORY_SORT_ORDER", payload)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   toggleCategoryVisibility(context, payload) {
     context.commit("TOGGLE_CATEGORY_VISIBILITY", payload)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 
   setCategoryColour(context, payload) {
     context.commit("SET_CATEGORY_COLOUR", payload)
     context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
+  },
+
+  setTodosCategory(context, payload) {
+    context.commit("SET_TODOS_CATEGORY", payload)
+    context.dispatch("setInLocal")
+    context.dispatch("setSFTodos")
   },
 }
 
@@ -199,6 +236,36 @@ export const mutations = {
   LOAD_TODOS(state, todos) {
     state.todos = todos
   },
+
+  SET_SF_TODOS(state) {
+    const hiddenCategoryIds = state.categories
+      .filter((c) => !c.visible)
+      .map((c) => c.id)
+
+    state.sfTodos = state.todos
+      .filter((t) => !hiddenCategoryIds.includes(t.categoryId))
+      .sort((a, b) => sortBy(a, b, state))
+  },
+
+  TOGGLE_SORT_ORDER(state) {
+    state.sfOptions.sortOrder =
+      state.sfOptions.sortOrder === "Ascending" ? "Descending" : "Ascending"
+  },
+
+  SET_SORT_BY(state) {
+    const options = [
+      "Created Date",
+      "Due Date",
+      "Category",
+      "Priority",
+      "Completed",
+      "Todo Text",
+    ]
+    const index = options.indexOf(state.sfOptions.sortBy)
+    const nextIndex = (index + 1) % options.length
+    state.sfOptions.sortBy = options[nextIndex]
+  },
+
   ADD_TODO(state, todo) {
     state.todos.push({
       id: uuid(),
@@ -271,6 +338,15 @@ export const mutations = {
   },
 
   REMOVE_CATEGORY(state, category) {
+    state.todos = state.todos.map((todo) => {
+      if (todo.categoryId === category.id) {
+        return {
+          ...todo,
+          categoryId: "",
+        }
+      }
+      return todo
+    })
     state.categories = state.categories.filter((c) => c.id !== category.id)
   },
 
@@ -301,4 +377,46 @@ export const mutations = {
   LOAD_CATEGORIES(state, categories) {
     state.categories = categories
   },
+}
+
+const sortBy = (a, b, state) => {
+  const { sfOptions, categories } = state
+  const { sortBy: sort, sortOrder } = sfOptions
+
+  if (sort === "Created Date") {
+    return sortOrder === "Ascending"
+      ? a.createdDate - b.createdDate
+      : b.createdDate - a.createdDate
+  } else if (sort === "Due Date") {
+    return sortOrder === "Ascending"
+      ? a.dueDate - b.dueDate
+      : b.dueDate - a.dueDate
+  } else if (sort === "Category") {
+    const aCategory = a.categoryId
+      ? categories.find((c) => c.id === a.categoryId).sortOrder
+      : 0
+    const bCategory = b.categoryId
+      ? categories.find((c) => c.id === b.categoryId).sortOrder
+      : 0
+
+    return sortOrder === "Ascending"
+      ? aCategory - bCategory
+      : bCategory - aCategory
+  } else if (sort === "Priority") {
+    return sortOrder === "Ascending"
+      ? a.priority - b.priority
+      : b.priority - a.priority
+  } else if (sort === "Completed") {
+    return sortOrder === "Ascending"
+      ? a.completed
+        ? -1
+        : 1
+      : a.completed
+      ? 1
+      : -1
+  } else if (sort === "Todo Text") {
+    return sortOrder === "Ascending"
+      ? a.text.localeCompare(b.text)
+      : b.text.localeCompare(a.text)
+  }
 }

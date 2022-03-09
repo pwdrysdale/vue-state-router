@@ -249,14 +249,14 @@ export const actions = {
     }
   },
 
-  addPrayer({ dispatch, commit }) {
+  addPrayer({ dispatch, commit }, payload = {}) {
     const prayer = {
       id: uuid(),
-      prayerName: "",
-      prayerText: "",
+      prayerName: payload.prayerName || "",
+      prayerText: payload.prayerText || "",
       createdDate: new Date(),
       prayedDates: [],
-      categoryId: "",
+      categoryId: payload.categoryId || "",
     }
     commit("ADD_PRAYER", prayer)
     dispatch(

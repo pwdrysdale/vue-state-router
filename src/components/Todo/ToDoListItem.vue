@@ -2,6 +2,21 @@
   <div class="gap-1 item">
     <ToggleButton :checked="todo.completed" :toggleFn="toggleCompleted" />
     <textarea-autosize autosize rows="1" v-model="textModel" />
+    <select
+      v-model="categoryModel"
+      class="w-full md:w-min"
+      placeholder="Category"
+      :style="{ background: catColour }"
+    >
+      <option disabled class="text-white" value="">Select category</option>
+      <option
+        v-for="category in categories"
+        :key="category.id"
+        :value="category.id"
+      >
+        {{ category.name }}
+      </option>
+    </select>
     <input
       type="date"
       :value="todo.dueDate.toISOString().split('T')[0]"
@@ -35,6 +50,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 import ToggleButton from "../ToggleButton.vue"
 
 export default {
@@ -44,6 +60,24 @@ export default {
     ToggleButton,
   },
   computed: {
+    ...mapState({
+      categories: (state) => state.todos.categories,
+    }),
+    catColour: function () {
+      if (this.todo.categoryId) {
+        const category = this.categories.find(
+          (category) => category.id === this.todo.categoryId
+        )
+
+        if (category) {
+          return category.colour
+        } else {
+          return "none"
+        }
+      } else {
+        return "none"
+      }
+    },
     textModel: {
       get() {
         return this.todo.text
@@ -53,7 +87,17 @@ export default {
           ...this.todo,
           text: value,
         })
-        this.setInLocal()
+      },
+    },
+    categoryModel: {
+      get() {
+        return this.todo.categoryId
+      },
+      set(value) {
+        this.$store.dispatch("todos/setTodosCategory", {
+          id: this.todo.id,
+          categoryId: value,
+        })
       },
     },
   },
@@ -63,7 +107,6 @@ export default {
         ...this.todo,
         completed: !this.todo.completed,
       })
-      this.setInLocal()
     },
     removeTodo(todo) {
       this.$store.dispatch("todos/removeTodo", todo)
@@ -72,9 +115,6 @@ export default {
       const dueDate = new Date(date)
       this.$store.dispatch("todos/setTodo", { ...todo, dueDate })
       todo.dueDate = new Date(this.$el.value)
-    },
-    setInLocal() {
-      this.$store.dispatch("todos/setInLocal")
     },
   },
 }

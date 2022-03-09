@@ -10,6 +10,11 @@ const routes = [
     component: () => import("../components/Prayers/PrayerScreen.vue"),
   },
   {
+    path: "/prayers/category/:categoryId",
+    name: "PrayerCategory",
+    component: () => import("../components/Prayers/Category.vue"),
+  },
+  {
     path: "/prayers/:id",
     name: "Prayer",
     component: () => import("../components/Prayers/PrayerSinglePage.vue"),

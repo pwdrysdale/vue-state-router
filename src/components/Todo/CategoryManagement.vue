@@ -1,38 +1,36 @@
 <template>
-  <div
-    class="flex items-start gap-2 overflow-scroll overflow-x-scroll rounded-md min-w-fit"
-  >
+  <div class="flex items-start gap-2 my-2 overflow-y-scroll rounded-md">
     <div
       v-for="category in categories"
-      v-bind:key="category.id"
-      class="flex flex-col items-start w-full p-2 rounded-md"
+      :key="category.id"
+      class="p-2 rounded-md"
       :style="{ background: category.colour }"
     >
       <div class="category-group">
-        <label for="category-name">Name: </label>
+        <label for="categoryName">Category Name:</label>
         <input
-          :value="category.categoryName"
+          :value="category.name"
           @input="setCategoryName(category.id, $event.target.value)"
           placeholder="Category name"
-          id="category-name"
+          id="categoryName"
         />
       </div>
       <div class="category-group">
-        <label for="category-color">Color: </label>
+        <label for="categoryColor">Category Color:</label>
         <input
           :value="category.colour"
           @input="setCategoryColour(category.id, $event.target.value)"
           placeholder="Category color"
-          id="category-colour"
+          id="categoryColor"
         />
       </div>
       <div class="category-group">
-        <label for="category-sort-order whitespace-nowrap">Sort Order: </label>
+        <label for="categorySortOrder">Sort Order:</label>
         <input
           :value="category.sortOrder"
           @input="setSortOrder(category.id, $event.target.value)"
           placeholder="Sort order"
-          id="category-sort-order"
+          id="categorySortOrder"
         />
       </div>
       <div class="category-group">
@@ -42,61 +40,51 @@
           :toggleFn="() => toggleCategoryVisibility(category.id)"
         />
       </div>
-      <div class="button-group">
-        <router-link
-          :to="{ name: 'PrayerCategory', params: { categoryId: category.id } }"
-        >
-          <button class="button">
-            <font-awesome-icon icon="eye" />
-          </button>
-        </router-link>
-
+      <div class="category-group">
         <button @click="deleteCategory(category.id)">
           <font-awesome-icon icon="trash" />
         </button>
       </div>
     </div>
-    <button @click="addCategory">
+    <button @click.prevent="addCategory">
       <font-awesome-icon icon="plus" />
     </button>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex"
-
 import ToggleButton from "../ToggleButton.vue"
 
+import { mapState } from "vuex"
 export default {
   name: "CategoryManagement",
   components: {
     ToggleButton,
   },
+
   computed: {
     ...mapState({
-      categories: (state) => state.prayers.categories,
+      categories: (state) => state.todos.categories,
     }),
   },
   methods: {
     addCategory() {
-      this.$store.dispatch("prayers/addCategory")
+      this.$store.dispatch("todos/addCategory")
     },
     setCategoryName(id, name) {
-      this.$store.dispatch("prayers/setCategoryName", { id, name })
+      this.$store.dispatch("todos/setCategoryName", { id, name })
     },
     setCategoryColour(id, colour) {
-      this.$store.dispatch("prayers/setCategoryColour", { id, colour })
+      this.$store.dispatch("todos/setCategoryColour", { id, colour })
     },
-    setSortOrder(id, order) {
-      this.$store.dispatch("prayers/setSortOrder", { id, order })
+    setSortOrder(id, sortOrder) {
+      this.$store.dispatch("todos/setCategorySortOrder", { id, sortOrder })
     },
     toggleCategoryVisibility(id) {
-      this.$store.dispatch("prayers/toggleCategoryVisibility", {
-        id,
-      })
+      this.$store.dispatch("todos/toggleCategoryVisibility", { id })
     },
     deleteCategory(id) {
-      this.$store.dispatch("prayers/removeCategory", id)
+      this.$store.dispatch("todos/removeCategory", { id })
     },
   },
 }

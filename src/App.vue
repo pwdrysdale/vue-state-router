@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen px-2">
     <div class="flex flex-col items-center w-full mx-auto">
-      <font-awesome-icon icon="cross" class="my-10 text-7xl" />
+      <font-awesome-icon icon="cross" class="my-10 text-9xl" />
       <!-- <font-awesome-icon icon="fa-trash" class="icon" /> -->
       <input
         v-model="name"

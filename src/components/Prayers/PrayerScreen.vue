@@ -24,6 +24,27 @@
         v-bind:key="prayer.id"
         v-bind="{ ...prayer }"
       />
+      <div>
+        <input type="text" v-model="prayerName" placeholder="Prayer name" />
+        <textarea-autosize
+          v-model="prayerText"
+          placeholder="Prayer text"
+          class="w-full"
+        />
+        <select v-model="categoryId" :style="{ background: catColour }">
+          <option disabled value="">Select a category</option>
+          <option
+            v-for="category in categories"
+            :value="category.id"
+            :key="category.id"
+          >
+            {{ category.categoryName }}
+          </option>
+        </select>
+        <button @click="addLongPrayer">
+          <font-awesome-icon icon="plus" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -39,7 +60,13 @@ export default {
     PrayerItem,
     CategoryManagement,
   },
-
+  data() {
+    return {
+      prayerName: "",
+      prayerText: "",
+      categoryId: "",
+    }
+  },
   computed: {
     ...mapState({
       statePrayers: (state) => state.prayers.prayers,
@@ -63,11 +90,36 @@ export default {
           this.sortPrayers(a, b, this.sortOrder, this.sortCategory)
         )
     },
+    catColour() {
+      if (this.categoryId) {
+        const category = this.categories.find(
+          (category) => category.id === this.categoryId
+        )
+
+        if (category) {
+          return category.colour
+        } else {
+          return "none"
+        }
+      } else {
+        return "none"
+      }
+    },
   },
 
   methods: {
     addPrayer() {
       this.$store.dispatch("prayers/addPrayer")
+    },
+    addLongPrayer() {
+      this.$store.dispatch("prayers/addPrayer", {
+        prayerName: this.prayerName,
+        prayerText: this.prayerText,
+        categoryId: this.categoryId,
+      })
+      this.prayerName = ""
+      this.prayerText = ""
+      this.categoryId = ""
     },
     changeSortCategory() {
       this.$store.dispatch("prayers/setSortCategory")
