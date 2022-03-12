@@ -41,6 +41,11 @@ const routes = [
     component: () => import("../components/Todo/ToDoList.vue"),
   },
   {
+    path: "/todos/category/:categoryId",
+    name: "TodosCategory",
+    component: () => import("../components/Todo/TodosCategory.vue"),
+  },
+  {
     path: "/timers",
     name: "TimerScreen",
     component: () => import("../components/Timer/TimerScreen.vue"),

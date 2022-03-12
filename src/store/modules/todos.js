@@ -379,6 +379,15 @@ export const mutations = {
   },
 }
 
+export const getters = {
+  todosByCategory: (id) => (state) => {
+    return state.todos.filter((todo) => todo.categoryId === id)
+  },
+  todosCategory: (id) => (state) => {
+    return state.categories.find((category) => category.id === id)
+  },
+}
+
 const sortBy = (a, b, state) => {
   const { sfOptions, categories } = state
   const { sortBy: sort, sortOrder } = sfOptions

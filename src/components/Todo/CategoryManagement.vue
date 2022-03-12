@@ -41,6 +41,13 @@
         />
       </div>
       <div class="category-group">
+        <router-link
+          :to="{ name: 'TodosCategory', params: { categoryId: category.id } }"
+        >
+          <button class="button-group">
+            <font-awesome-icon icon="eye" />
+          </button>
+        </router-link>
         <button @click="deleteCategory(category.id)">
           <font-awesome-icon icon="trash" />
         </button>
