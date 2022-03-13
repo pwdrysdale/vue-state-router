@@ -5,7 +5,7 @@
     <div
       v-for="category in categories"
       v-bind:key="category.id"
-      class="flex flex-col items-start w-full p-2 rounded-md"
+      class="flex flex-col items-start p-2 rounded-md"
       :style="{ background: category.colour }"
     >
       <div class="category-group">

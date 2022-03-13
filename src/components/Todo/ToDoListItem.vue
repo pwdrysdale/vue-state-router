@@ -1,5 +1,5 @@
 <template>
-  <div class="gap-1 item">
+  <div class="item">
     <ToggleButton :checked="todo.completed" :toggleFn="toggleCompleted" />
     <textarea-autosize autosize rows="1" v-model="textModel" />
 
@@ -132,7 +132,7 @@ export default {
 
 <style scoped>
 .item {
-  @apply flex flex-row items-center justify-between py-2 mx-auto w-full border-b-2 border-gray-800;
+  @apply flex flex-col lg:flex-row items-center justify-between py-2 mx-auto w-full border-b-2 border-gray-800 gap-1;
 }
 
 .hide {
