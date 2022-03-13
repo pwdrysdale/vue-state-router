@@ -3,7 +3,7 @@
     <div
       v-for="category in categories"
       :key="category.id"
-      class="p-2 rounded-md"
+      class="flex flex-col items-start p-2 rounded-md"
       :style="{ background: category.colour }"
     >
       <div class="category-group">
@@ -40,11 +40,11 @@
           :toggleFn="() => toggleCategoryVisibility(category.id)"
         />
       </div>
-      <div class="category-group">
+      <div class="items-start button-group">
         <router-link
           :to="{ name: 'TodosCategory', params: { categoryId: category.id } }"
         >
-          <button class="button-group">
+          <button>
             <font-awesome-icon icon="eye" />
           </button>
         </router-link>

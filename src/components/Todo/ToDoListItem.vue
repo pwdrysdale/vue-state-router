@@ -31,7 +31,7 @@
     </select>
     <select
       v-model="categoryModel"
-      class="w-full md:w-min"
+      class="w-full ml-1 md:w-min"
       placeholder="Category"
       :style="{ background: catColour }"
     >
@@ -44,16 +44,18 @@
         {{ category.name }}
       </option>
     </select>
-    <router-link
-      :to="{ name: 'TodosCategory', params: { categoryId: todo.categoryId } }"
-    >
-      <button v-show="showCatLink">
-        <font-awesome-icon icon="eye" />
+    <div class="ml-1 button-group">
+      <router-link
+        :to="{ name: 'TodosCategory', params: { categoryId: todo.categoryId } }"
+      >
+        <button v-show="showCatLink">
+          <font-awesome-icon icon="eye" />
+        </button>
+      </router-link>
+      <button @click="removeTodo(todo)">
+        <font-awesome-icon icon="trash" />
       </button>
-    </router-link>
-    <button @click="removeTodo(todo)" class="mx-2">
-      <font-awesome-icon icon="trash" />
-    </button>
+    </div>
   </div>
 </template>
 
