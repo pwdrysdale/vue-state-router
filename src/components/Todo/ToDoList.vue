@@ -11,7 +11,12 @@
       </button>
     </div>
     <div class="list">
-      <ToDoListItem v-for="todo in sfTodos" v-bind:key="todo.id" :todo="todo" />
+      <ToDoListItem
+        v-for="todo in sfTodos"
+        v-bind:key="todo.id"
+        :todo="todo"
+        showCatLink="true"
+      />
     </div>
 
     <div class="flex w-full button-group">
@@ -47,7 +52,7 @@ export default {
   },
   methods: {
     addTodo() {
-      this.$store.dispatch("todos/addTodo", this.newTodo)
+      this.$store.dispatch("todos/addTodo", { text: this.newTodo })
       this.newTodo = ""
     },
     changeSortCategory() {

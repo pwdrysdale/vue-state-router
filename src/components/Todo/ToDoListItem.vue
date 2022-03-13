@@ -2,21 +2,7 @@
   <div class="gap-1 item">
     <ToggleButton :checked="todo.completed" :toggleFn="toggleCompleted" />
     <textarea-autosize autosize rows="1" v-model="textModel" />
-    <select
-      v-model="categoryModel"
-      class="w-full md:w-min"
-      placeholder="Category"
-      :style="{ background: catColour }"
-    >
-      <option disabled class="text-white" value="">Select category</option>
-      <option
-        v-for="category in categories"
-        :key="category.id"
-        :value="category.id"
-      >
-        {{ category.name }}
-      </option>
-    </select>
+
     <input
       type="date"
       :value="todo.dueDate.toISOString().split('T')[0]"
@@ -43,6 +29,28 @@
       <option value="4">4</option>
       <option value="5">5</option>
     </select>
+    <select
+      v-model="categoryModel"
+      class="w-full md:w-min"
+      placeholder="Category"
+      :style="{ background: catColour }"
+    >
+      <option disabled class="text-white" value="">Select category</option>
+      <option
+        v-for="category in categories"
+        :key="category.id"
+        :value="category.id"
+      >
+        {{ category.name }}
+      </option>
+    </select>
+    <router-link
+      :to="{ name: 'TodosCategory', params: { categoryId: todo.categoryId } }"
+    >
+      <button v-show="showCatLink">
+        <font-awesome-icon icon="eye" />
+      </button>
+    </router-link>
     <button @click="removeTodo(todo)" class="mx-2">
       <font-awesome-icon icon="trash" />
     </button>
@@ -55,7 +63,7 @@ import ToggleButton from "../ToggleButton.vue"
 
 export default {
   name: "ToDoListItem",
-  props: ["todo"],
+  props: ["todo", "showCatLink"],
   components: {
     ToggleButton,
   },

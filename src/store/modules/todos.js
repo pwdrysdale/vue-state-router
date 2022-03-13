@@ -31,16 +31,16 @@ export const actions = {
     dispatch("setSFTodos")
   },
 
-  addTodo(context, newTodo) {
+  addTodo(context, payload) {
     context.dispatch(
       "toasts/addToasts",
       {
-        text: "Todo added: " + newTodo,
+        text: "Todo added: " + payload.text,
         type: "success",
       },
       { root: true }
     )
-    context.commit("ADD_TODO", newTodo)
+    context.commit("ADD_TODO", payload)
     context.dispatch("setInLocal")
     context.dispatch("setSFTodos")
   },
@@ -266,12 +266,12 @@ export const mutations = {
     state.sfOptions.sortBy = options[nextIndex]
   },
 
-  ADD_TODO(state, todo) {
+  ADD_TODO(state, payload) {
     state.todos.push({
       id: uuid(),
-      text: todo,
+      text: payload.text,
       done: false,
-      categoryId: "",
+      categoryId: payload.categoryId || "",
       dueDate: new Date(),
       createdDate: new Date(),
       priority: 3,
@@ -380,10 +380,10 @@ export const mutations = {
 }
 
 export const getters = {
-  todosByCategory: (id) => (state) => {
-    return state.todos.filter((todo) => todo.categoryId === id)
+  todosByCategory: (state) => (id) => {
+    return state.sfTodos.filter((todo) => todo.categoryId === id)
   },
-  todosCategory: (id) => (state) => {
+  todosCategory: (state) => (id) => {
     return state.categories.find((category) => category.id === id)
   },
 }
