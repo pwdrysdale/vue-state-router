@@ -24,11 +24,13 @@ export const actions = {
   toggleSortOrder({ commit, dispatch }) {
     commit("TOGGLE_SORT_ORDER")
     dispatch("setSFTodos")
+    dispatch("setInLocal")
   },
 
   setSortBy({ commit, dispatch }) {
     commit("SET_SORT_BY")
     dispatch("setSFTodos")
+    dispatch("setInLocal")
   },
 
   addTodo(context, payload) {
@@ -111,7 +113,7 @@ export const actions = {
       return
     }
 
-    const { todos, categories } = parsed
+    const { todos, categories, sfOptions } = parsed
     const categoryTodos =
       todos.map((t) => (!t.categoryId ? { ...t, categoryId: "" } : t)) || []
 
@@ -124,6 +126,10 @@ export const actions = {
     })
     context.commit("LOAD_TODOS", datesFixed)
     context.commit("LOAD_CATEGORIES", categories || [])
+    context.commit(
+      "LOAD_SF_OPTIONS",
+      sfOptions || { sortOrder: "Ascending", sortBy: "Created Date" }
+    )
     context.dispatch("setSFTodos")
   },
 
@@ -224,17 +230,15 @@ export const actions = {
     context.dispatch("setInLocal")
     context.dispatch("setSFTodos")
   },
-
-  setTodosCategory(context, payload) {
-    context.commit("SET_TODOS_CATEGORY", payload)
-    context.dispatch("setInLocal")
-    context.dispatch("setSFTodos")
-  },
 }
 
 export const mutations = {
   LOAD_TODOS(state, todos) {
     state.todos = todos
+  },
+
+  LOAD_SF_OPTIONS(state, options) {
+    state.sfOptions = options
   },
 
   SET_SF_TODOS(state) {
@@ -348,18 +352,6 @@ export const mutations = {
       return todo
     })
     state.categories = state.categories.filter((c) => c.id !== category.id)
-  },
-
-  SET_TODOS_CATEGORY(state, payload) {
-    state.todos = state.todos.map((todo) => {
-      if (todo.id === payload.id) {
-        return {
-          ...todo,
-          categoryId: payload.categoryId,
-        }
-      }
-      return todo
-    })
   },
 
   TOGGLE_CATEGORY_VISIBILITY(state, payload) {

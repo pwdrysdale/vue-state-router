@@ -62,7 +62,7 @@
             <font-awesome-icon icon="eye" />
           </button>
         </router-link>
-        <button @click="removePrayer">
+        <button @click="removePrayer" class="hidden md:block">
           <font-awesome-icon icon="trash" />
         </button>
       </div>

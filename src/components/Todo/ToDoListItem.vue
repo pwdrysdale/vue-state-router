@@ -9,7 +9,7 @@
       @input="setDate($event.target.value, todo)"
     />
     <select
-      v-model.number="todo.priority"
+      v-model.number="priorityModel"
       class="opacity-80"
       :class="
         todo.priority === 5
@@ -104,9 +104,20 @@ export default {
         return this.todo.categoryId
       },
       set(value) {
-        this.$store.dispatch("todos/setTodosCategory", {
-          id: this.todo.id,
+        this.$store.dispatch("todos/setTodo", {
+          ...this.todo,
           categoryId: value,
+        })
+      },
+    },
+    priorityModel: {
+      get() {
+        return this.todo.priority
+      },
+      set(value) {
+        this.$store.dispatch("todos/setTodo", {
+          ...this.todo,
+          priority: value,
         })
       },
     },
